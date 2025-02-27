@@ -1,6 +1,37 @@
 import Notify from "@wcjiang/notify";
 import _ from "lodash";
 import {useCustomizeThemeStore} from "@/stores/customizeTheme";
+import * as emoji from "node-emoji";
+
+// https://emoji6.com/emojiall/
+const jokes = [
+  "卧槽",
+  "割韭菜啦！",
+  "打雷啦，下雨啦...",
+  "打起来了",
+  "号外号外",
+  "某某爱豆塌房",
+  "重磅新闻",
+  "滴~系统小秘密",
+  "嘘！笑点高的不要笑！",
+  "神秘情报！",
+  "报告长官，发现UFO !!!",
+  "喂喂喂",
+  "前方高能！一大波消息正在靠近！",
+  "别装了，快来摸鱼",
+  "哈哈哈哈哈哈",
+  "夺命连环call即将抵达战场！",
+  "XXX正在疯狂输出中...",
+  "收到一条彩虹屁，快去看看是谁吹的！",
+  "社死现场",
+  "XXX已破防",
+  "爷青回",
+  "打雷啦，下雨啦...",
+  "外星人来了",
+  "世界末日了！！！",
+  "地球沦陷了",
+  "怪兽出没",
+];
 
 const notify = new Notify({
   message: "There is message.", // page title.
@@ -38,42 +69,27 @@ const notify = new Notify({
   },
 });
 
-// https://emoji6.com/emojiall/
-const jokes = [
-  "🌱割韭菜啦！🌱",
-  "打雷啦，下雨啦...👽️👽️👽️",
-  "⚔️打起来了⚔️",
-  "号外号外☘️☘️☘️",
-  "某某爱豆塌房🍃",
-  "重磅新闻🌱",
-  "🌲滴~系统小秘密",
-  "😜嘘！笑点高的不要笑！😘",
-  "神秘情报！🙃",
-  "报告长官，发现UFO !!!🐶",
-  "喂喂喂🌷",
-  "☁️前方高能！一大波消息正在靠近！",
-  "别装了，快来摸鱼🌪️🌪️🌪️",
-  "哈哈哈哈哈哈😇",
-  "🌼夺命连环call即将抵达战场！🌼",
-  "🃏XXX正在疯狂输出中...🃏",
-  "收到一条彩虹屁，快去看看是谁吹的！🌠",
-  "⚽️社死现场",
-  "XXX已破防🗻",
-  "爷青回🎆",
-  "🌏️打雷啦，下雨啦...🌏️",
-  "🔔外星人来了",
-  "世界末日了！！！✌️",
-  "📣地球沦陷了",
-  "🚀怪兽出没",
-];
 
 let count = 0;
+
+export function randomJoke() {
+  let myJoke = jokes[_.random(0, jokes.length - 1)];
+  const emojiBefore = emoji.random().emoji;
+  const emojiAfter = emoji.random().emoji;
+  for (let i = 0; i < _.random(0, 3); i++) {
+    myJoke = emojiBefore + myJoke;
+  }
+  for (let i = 0; i < _.random(0, 2); i++) {
+    myJoke = myJoke + emojiAfter;
+  }
+  return myJoke;
+}
 
 export async function newNotify(desktopTitle: string, desktopBody: string) {
   ++count;
   console.log("notifyUtils newNotify 推送消息");
   const customizeTheme = useCustomizeThemeStore();
-  const joke = jokes[_.random(0, jokes.length - 1)];
+  const joke = randomJoke();
   if (_.isEmpty(desktopBody)) {
     desktopBody = joke;
   }

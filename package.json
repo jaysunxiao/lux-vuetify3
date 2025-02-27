@@ -35,6 +35,7 @@
     "md-editor-v3": "^4.8.2",
     "microsoft-cognitiveservices-speech-sdk": "^1.27.0",
     "moment": "^2.29.4",
+    "node-emoji": "^2.2.0",
     "openai": "^3.2.1",
     "pinia": "^2.0.34",
     "pinia-plugin-persist": "^1.0.0",

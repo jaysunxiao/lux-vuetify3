@@ -24,6 +24,7 @@ import clipboard from "@/utils/clipboardUtils";
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {useNewsStore, levelMap} from "@/stores/newsStore";
 import {getFormatDate, getFormatMonth} from "@/utils/timeUtils";
+import {randomQuoteWithWebSite} from "@/utils/quoteUtils";
 import Chart from 'chart.js/auto';
 import {newNotify} from "@/utils/notifyUtils";
 
@@ -52,13 +53,6 @@ const floatingButtonRef = ref(false);
 let endId = -1;
 let startId = -1;
 
-const jokes = [
-  "🌴快乐韭菜网，做一个快乐的韭菜，https://jiucai.fun",
-  "🌴快乐韭菜网，爱割才会赢，https://jiucai.fun",
-  "🌴做韭菜也得快乐哦，https://jiucai.fun",
-  "🌴韭菜炒鸡蛋，快乐干饭，https://jiucai.fun",
-  "🌴因为run的快，所以是一个快乐的韭菜，https://jiucai.fun",
-];
 
 onMounted(() => {
   console.log("news on mounted-----------------------------------------");
@@ -444,9 +438,10 @@ async function goToRank() {
 }
 
 async function goToUrl(trending: Trending, event: Event) {
-  let str = trending.title + "\n\n";
+  let str = trending.title + "\n";
   str = str + trending.subTitle + "\n\n";
-  str = str + jokes[_.random(0, jokes.length - 1)];
+  str = str + trending.url + "\n\n";
+  str = str + randomQuoteWithWebSite();
   clipboard(str, event);
   snackbarStore.showSuccessMessage("复制成功");
   setTimeout(() => {
@@ -481,7 +476,7 @@ function copyConcept(concept: Concept, event: Event) {
   str = str + concept.level + "级电报 " + concept.ctime + "\n";
   str = str + "⚡" + concept.title + "\n\n" + concept.content + "\n\n";
   str = str + concept.url + "\n\n";
-  str = str + jokes[_.random(0, jokes.length - 1)];
+  str = str + randomQuoteWithWebSite();
   clipboard(str, event);
   snackbarStore.showSuccessMessage(concept.content + "复制成功");
 }
@@ -515,7 +510,7 @@ function copyNews(news: News, event: Event) {
       str = str + " " + subject;
     }
   }
-  str = str + "\n" + jokes[_.random(0, jokes.length - 1)];
+  str = str + "\n" + randomQuoteWithWebSite();
   clipboard(str, event);
   snackbarStore.showSuccessMessage("复制成功");
 }
