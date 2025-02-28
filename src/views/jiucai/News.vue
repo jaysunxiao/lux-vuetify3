@@ -515,6 +515,34 @@ function copyNews(news: News, event: Event) {
   snackbarStore.showSuccessMessage("复制成功");
 }
 
+function formatTimeAgo(timestamp) {
+  // 获取当前时间的时间戳（单位为毫秒）
+  const now = Date.now();
+  // 计算时间差（单位为毫秒）
+  const diff = now - timestamp;
+
+  // 将时间差转换为秒
+  const diffInSeconds = Math.floor(diff / 1000);
+
+  // 根据时间差的大小，格式化输出
+  if (diffInSeconds < 60) {
+    // 不足1分钟
+    return `${diffInSeconds}秒前`;
+  } else if (diffInSeconds < 3600) {
+    // 不足1小时
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes}分钟前`;
+  } else if (diffInSeconds < 86400) {
+    // 不足1天
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours}小时前`;
+  } else {
+    // 1天及以上
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days}天前`;
+  }
+}
+
 </script>
 
 
@@ -864,7 +892,7 @@ function copyNews(news: News, event: Event) {
                     <tbody>
                     <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
                       <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }}
+                        {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
                       </td>
                     </tr>
                     </tbody>
@@ -895,7 +923,7 @@ function copyNews(news: News, event: Event) {
                     <tbody>
                     <tr v-for="(trending, i) in dfcf1TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
                       <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }}
+                        {{ i + 1 }}.{{ trending.title }} - {{ formatTimeAgo(trending.ctime) }}
                       </td>
                       <td>{{ trending.subTitle }}</td>
                     </tr>
