@@ -16,6 +16,7 @@ export default {
     team: "cutting leek team",
     ask: "how to cut leeks",
     backendGithub: "backend source",
+    setting: "setting",
     tutorial: "Tutorial",
     nav: {
       n1: "Movies/TV/Cartoon",

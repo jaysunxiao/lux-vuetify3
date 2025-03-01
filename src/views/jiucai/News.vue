@@ -22,6 +22,7 @@ import _ from "lodash";
 import {useDisplay} from "vuetify";
 import clipboard from "@/utils/clipboardUtils";
 import {useSnackbarStore} from "@/stores/snackbarStore";
+import {useMyStore} from "@/stores/myStore";
 import {useNewsStore, levelMap} from "@/stores/newsStore";
 import {parseTime, getFormatDate, getFormatMonth} from "@/utils/timeUtils";
 import {randomEmotion, randomQuoteWithWebSite} from "@/utils/quoteUtils";
@@ -30,6 +31,7 @@ import {newNotify} from "@/utils/notifyUtils";
 
 const snackbarStore = useSnackbarStore();
 const newsStore = useNewsStore();
+const myStore = useMyStore();
 const {mobile, width, height} = useDisplay();
 
 const NEW_CONCEPT_TIME = 33 * 24 * 60 * 60 * 1000;
@@ -138,7 +140,9 @@ function notifyNews(news: Array<News>) {
   if (_.isEmpty(first)) {
     return;
   }
-  newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content)
+  if (myStore.newsNotify) {
+    newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content)
+  }
   notifyTime = currentTime;
 }
 

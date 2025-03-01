@@ -75,16 +75,16 @@ function adminManager() {
       <!-- ---------------------------------------------- -->
 
       <v-list variant="flat" elevation="0" :lines="false" density="compact">
-        <v-list-item color="primary" density="compact" @click="myStore.rewardTipDialog = true">
-          <template v-slot:prepend>
-            <v-avatar size="30">
-              <v-icon>mdi-credit-card-outline</v-icon>
-            </v-avatar>
-          </template>
-          <div>
-            <v-list-item-subtitle class="text-body-2">{{ $t("jiucai.profileDetails") + " " + myStore.user.cost/100 }}</v-list-item-subtitle>
-          </div>
-        </v-list-item>
+<!--        <v-list-item color="primary" density="compact" @click="myStore.rewardTipDialog = true">-->
+<!--          <template v-slot:prepend>-->
+<!--            <v-avatar size="30">-->
+<!--              <v-icon>mdi-credit-card-outline</v-icon>-->
+<!--            </v-avatar>-->
+<!--          </template>-->
+<!--          <div>-->
+<!--            <v-list-item-subtitle class="text-body-2">{{ $t("jiucai.profileDetails") + " " + myStore.user.cost/100 }}</v-list-item-subtitle>-->
+<!--          </div>-->
+<!--        </v-list-item>-->
         <v-list-item color="primary" density="compact" @click="myStore.rewardTipDialog = true">
           <template v-slot:prepend>
             <v-avatar size="30">
@@ -123,6 +123,16 @@ function adminManager() {
           </template>
           <div>
             <v-list-item-subtitle class="text-body-2">{{ $t("jiucai.login") }}</v-list-item-subtitle>
+          </div>
+        </v-list-item>
+        <v-list-item color="primary" density="compact" @click="myStore.settingDialog = true">
+          <template v-slot:prepend>
+            <v-avatar size="30">
+              <v-icon>mdi-cogs</v-icon>
+            </v-avatar>
+          </template>
+          <div>
+            <v-list-item-subtitle class="text-body-2">{{ $t("jiucai.setting") }}</v-list-item-subtitle>
           </div>
         </v-list-item>
       </v-list>

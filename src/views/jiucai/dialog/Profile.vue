@@ -90,13 +90,13 @@ async function updateProfile() {
               <v-list-item-title v-text="myStore.user.login"></v-list-item-title>
               <v-list-item-subtitle>累计登录</v-list-item-subtitle>
             </v-list-item>
-            <v-list-item>
-              <template v-slot:prepend>
-                <v-icon icon="mdi-currency-jpy"></v-icon>
-              </template>
-              <v-list-item-title v-text="myStore.user.cost / 100"></v-list-item-title>
-              <v-list-item-subtitle>白嫖指数</v-list-item-subtitle>
-            </v-list-item>
+<!--            <v-list-item>-->
+<!--              <template v-slot:prepend>-->
+<!--                <v-icon icon="mdi-currency-jpy"></v-icon>-->
+<!--              </template>-->
+<!--              <v-list-item-title v-text="myStore.user.cost / 100"></v-list-item-title>-->
+<!--              <v-list-item-subtitle>白嫖指数</v-list-item-subtitle>-->
+<!--            </v-list-item>-->
           </v-list>
 
           <v-text-field v-model="phoneNumberRef"

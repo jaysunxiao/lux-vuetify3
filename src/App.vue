@@ -10,6 +10,7 @@
     <WeChatLogin />
     <BrowserNotify />
     <Profile />
+    <Setting />
     <NewsSearch />
     <Admin />
   </v-app>
@@ -28,6 +29,7 @@ import RewardTip from "@/views/jiucai/dialog/RewardTip.vue";
 import WeChatLogin from "@/views/jiucai/dialog/WeChatLogin.vue";
 import BrowserNotify from "@/views/jiucai/dialog/BrowserNotify.vue";
 import Profile from "@/views/jiucai/dialog/Profile.vue";
+import Setting from "@/views/jiucai/dialog/Setting.vue";
 import NewsSearch from "@/views/jiucai/dialog/NewsSearch.vue";
 import Admin from "@/views/jiucai/dialog/Admin.vue";
 

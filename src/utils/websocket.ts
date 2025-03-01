@@ -268,8 +268,11 @@ function route(packet: any) {
   const receiver = receiverMap.get(packet.constructor);
   if (packet.constructor == GroupChatNotice) {
     const newsStore = useNewsStore();
+    const myStore = useMyStore();
     newsStore.chatMessageIdDiff = _.first(packet.messages).id - newsStore.chatMessageId;
-    newNotify("新消息");
+    if (myStore.squareNotify) {
+      newNotify("新消息");
+    }
   }
   if (receiver == null) {
     console.log("router not exist ", packet);

@@ -17,6 +17,7 @@ export default {
     team: "用韭菜发电",
     ask: "如何割韭菜",
     backendGithub: "开源地址",
+    setting: "设置",
     login: "登录",
     profile: "我的主页",
     tutorial: "教程",

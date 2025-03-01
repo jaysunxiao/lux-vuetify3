@@ -16,6 +16,7 @@ export const useMyStore = defineStore("myStore", {
     loginDialog: false,
     profileDialog: false,
     adminDialog: false,
+    settingDialog: false,
     token: "",
     user: {
       id: 0,
@@ -28,6 +29,11 @@ export const useMyStore = defineStore("myStore", {
       cost: 0
     },
 
+    // setting
+    newsNotify: true,
+    squareNotify: true,
+
+    // chatgpt
     baidu: true,
     xunfei: true,
     tencent: true,
@@ -55,6 +61,7 @@ export const useMyStore = defineStore("myStore", {
   persist: {
     enabled: true,
     strategies: [{storage: localStorage, paths: ["announce", "token", "user", "lastForceShow",
+        "newsNotify", "squareNotify",
         "baidu", "xunfei", "llama", "tencent", "deepseek", "alibaba", "google", "chatgpt",
         "baiduCharacter", "xunfeiCharacter", "llamaCharacter", "tencentCharacter", "deepseekCharacter", "alibabaCharacter", "googleCharacter", "chatgptCharacter",
         "googleSearch", "bingSearch", "weixinSearch", "bilibiliSearch"]}],
