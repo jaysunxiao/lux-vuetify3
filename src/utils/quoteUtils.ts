@@ -115,6 +115,9 @@ const jokes = [
   "绿针挦露韭，碧箸翦春蒿。——喻良能《次韵外舅黄虞卿为爱山园好八首》",
 ];
 
+export function randomEmotion() {
+  return emoji.random().emoji;
+}
 
 export function randomQuote() {
   const emojiBefore = emoji.random().emoji;

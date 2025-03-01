@@ -23,8 +23,8 @@ import {useDisplay} from "vuetify";
 import clipboard from "@/utils/clipboardUtils";
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {useNewsStore, levelMap} from "@/stores/newsStore";
-import {getFormatDate, getFormatMonth} from "@/utils/timeUtils";
-import {randomQuoteWithWebSite} from "@/utils/quoteUtils";
+import {parseTime, getFormatDate, getFormatMonth} from "@/utils/timeUtils";
+import {randomEmotion, randomQuoteWithWebSite} from "@/utils/quoteUtils";
 import Chart from 'chart.js/auto';
 import {newNotify} from "@/utils/notifyUtils";
 
@@ -438,8 +438,7 @@ async function goToRank() {
 }
 
 async function goToUrl(trending: Trending, event: Event) {
-  let str = trending.title + "\n";
-  str = str + trending.subTitle + "\n\n";
+  let str = parseTime(trending.ctime) + " / " + trending.title + " - " + trending.subTitle + "\n\n";
   str = str + trending.url + "\n\n";
   str = str + randomQuoteWithWebSite();
   clipboard(str, event);
@@ -473,8 +472,8 @@ function hotRankChange(rankChange: number) {
 
 function copyConcept(concept: Concept, event: Event) {
   let str = "";
-  str = str + concept.level + "级电报 " + concept.ctime + "\n";
-  str = str + "⚡" + concept.title + "\n\n" + concept.content + "\n\n";
+  str = str + concept.level + "级情报 " + concept.ctime + "\n";
+  str = str + "🆘" + concept.title + "\n\n" + concept.content + "\n\n";
   str = str + concept.url + "\n\n";
   str = str + randomQuoteWithWebSite();
   clipboard(str, event);
@@ -485,27 +484,27 @@ function copyNews(news: News, event: Event) {
   let str = "";
   str = str + news.level + "级情报 " + news.ctime + "\n";
   if (!_.isEmpty(news.title)) {
-    str = str + "⚡" + news.title + "\n\n"
+    str = str + "⚡️" + news.title + "\n\n"
   } else {
     str = str + "\n"
   }
   str = str + news.content + "\n";
 
   if (!_.isEmpty(news.stocks)) {
-    str = str + "\n🎯股票:";
+    str = str + "\n" + randomEmotion() + "股票:";
     for (const stock of news.stocks) {
       str = str + " " + stock.name + "#" + stock.price + "(" + stock.rise + ")";
     }
   }
   // 🐳
   if (!_.isEmpty(news.concepts)) {
-    str = str + "\n🐠概念:";
+    str = str + "\n" + randomEmotion() + "概念:";
     for (const concept of news.concepts) {
       str = str + " " + concept.name + "(" + concept.rise + ")";
     }
   }
   if (!_.isEmpty(news.subjects)) {
-    str = str + "\n🐧热词:";
+    str = str + "\n" + randomEmotion() + "热词:";
     for (const subject of news.subjects) {
       str = str + " " + subject;
     }
