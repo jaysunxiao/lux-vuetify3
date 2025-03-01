@@ -99,6 +99,7 @@ async function download(url) {
     // Called when an error occurred
     snackbarStore.showErrorMessage(error);
   });
+  snackbarStore.showSuccessMessage("正在后台下载图片，约1分钟");
 }
 
 async function share(url) {
