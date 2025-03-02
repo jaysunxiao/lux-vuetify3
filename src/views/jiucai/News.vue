@@ -441,15 +441,17 @@ async function goToRank() {
   window.open("https://guba.eastmoney.com/rank/", '_blank');
 }
 
-async function goToUrl(trending: Trending, event: Event) {
+async function goToUrl(trending: Trending, event: Event, go: boolean = true) {
   let str = trending.title + " - " + trending.subTitle + " - " + parseTime(trending.ctime) + "\n\n";
   str = str + trending.url + "\n\n";
   str = str + randomQuoteWithWebSite();
   clipboard(str, event);
   snackbarStore.showSuccessMessage("复制成功");
-  setTimeout(() => {
-    window.open(trending.url, '_blank');
-  }, 1000);
+  if (go) {
+    setTimeout(() => {
+      window.open(trending.url, '_blank');
+    }, 1000);
+  }
 }
 
 function scrollToTop() {
@@ -990,11 +992,11 @@ function formatTimeAgo(timestamp) {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in dfcf2TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+                    <tr v-for="(trending, i) in dfcf2TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
                       <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }}
+                        <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
                       </td>
-                      <td>{{ trending.subTitle }}</td>
+                      <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>
                     </tr>
                     </tbody>
                   </v-table>
