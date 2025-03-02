@@ -616,11 +616,11 @@ function formatTimeAgo(timestamp) {
           </v-table>
         </v-card-text>
       </v-card>
-      <v-card v-if="!_.isEmpty(xueqiuTrendingRef)" class="mt-3">
+      <v-card v-if="!_.isEmpty(bloomBergTrendingRef)" class="mt-3">
         <v-card-title>
-          <v-icon icon="mdi-snowflake"></v-icon>
+          <v-icon icon="mdi-chart-bell-curve"></v-icon>
           &nbsp;
-          雪球
+          彭博社
           &nbsp;
         </v-card-title>
         <v-card-text>
@@ -628,14 +628,14 @@ function formatTimeAgo(timestamp) {
             <thead>
             <tr>
               <th>
-                雪球话题
+                彭博社头条新闻
               </th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+            <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
               <td :class="trendingClass(trending)">
-                {{ i + 1 }}.{{ trending.title }}
+                {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }}
               </td>
             </tr>
             </tbody>
@@ -668,11 +668,11 @@ function formatTimeAgo(timestamp) {
           </v-table>
         </v-card-text>
       </v-card>
-      <v-card v-if="!_.isEmpty(bloomBergTrendingRef)" class="mt-3">
+      <v-card v-if="!_.isEmpty(xueqiuTrendingRef)" class="mt-3">
         <v-card-title>
-          <v-icon icon="mdi-chart-bell-curve"></v-icon>
+          <v-icon icon="mdi-snowflake"></v-icon>
           &nbsp;
-          彭博社
+          雪球
           &nbsp;
         </v-card-title>
         <v-card-text>
@@ -680,21 +680,50 @@ function formatTimeAgo(timestamp) {
             <thead>
             <tr>
               <th>
-                彭博社头条新闻
+                雪球话题
               </th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+            <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
               <td :class="trendingClass(trending)">
-                {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }}
+                {{ i + 1 }}.{{ trending.title }}
               </td>
             </tr>
             </tbody>
           </v-table>
         </v-card-text>
       </v-card>
-
+      <v-card v-if="!_.isEmpty(dfcf2TrendingRef)" class="mt-3">
+        <v-card-title>
+          <v-icon icon="mdi-party-popper"></v-icon>
+          &nbsp;
+          研报
+          &nbsp;
+        </v-card-title>
+        <v-card-text>
+          <v-table density="compact">
+            <thead>
+            <tr>
+              <th>
+                策略报告
+              </th>
+              <th>
+                媒体
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(trending, i) in dfcf2TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
+              <td :class="trendingClass(trending)">
+                <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
+              </td>
+              <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>
+            </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+      </v-card>
       <v-card v-if="!_.isEmpty(weiboTrendingRef)" class="mt-3">
         <v-card-title>
           <v-icon icon="mdi-sina-weibo"></v-icon>
@@ -716,6 +745,36 @@ function formatTimeAgo(timestamp) {
               <td :class="trendingClass(trending)">
                 {{ i + 1 }}.{{ trending.title }}
               </td>
+            </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+      </v-card>
+      <v-card v-if="!_.isEmpty(douyinTrendingRef)" class="mt-3">
+        <v-card-title>
+          <v-icon icon="mdi-music-circle"></v-icon>
+          &nbsp;
+          抖音
+          &nbsp;
+        </v-card-title>
+        <v-card-text>
+          <v-table density="compact">
+            <thead>
+            <tr>
+              <th>
+                抖音热搜榜
+              </th>
+              <th>
+                热度
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(trending, i) in douyinTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+              <td :class="trendingClass(trending)">
+                {{ i + 1 }}.{{ trending.title }}
+              </td>
+              <td>{{ trending.subTitle }}</td>
             </tr>
             </tbody>
           </v-table>
