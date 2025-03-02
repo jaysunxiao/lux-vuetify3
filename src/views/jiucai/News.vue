@@ -442,7 +442,7 @@ async function goToRank() {
 }
 
 async function goToUrl(trending: Trending, event: Event) {
-  let str = parseTime(trending.ctime) + " / " + trending.title + " - " + trending.subTitle + "\n\n";
+  let str = trending.title + " - " + trending.subTitle + " - " + parseTime(trending.ctime) + "\n\n";
   str = str + trending.url + "\n\n";
   str = str + randomQuoteWithWebSite();
   clipboard(str, event);
