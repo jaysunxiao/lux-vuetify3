@@ -33,6 +33,23 @@ const jokes = [
   "怪兽出没",
 ];
 
+export function randomJoke() {
+  let myJoke = jokes[_.random(0, jokes.length - 1)];
+  const emojiBefore = emoji.random().emoji;
+  const emojiAfter = emoji.random().emoji;
+  for (let i = 0; i < _.random(0, 3); i++) {
+    myJoke = emojiBefore + myJoke;
+  }
+  for (let i = 0; i < _.random(0, 2); i++) {
+    myJoke = myJoke + emojiAfter;
+  }
+  return myJoke;
+}
+
+// ------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------
+
 const notify = new Notify({
   message: "There is message.", // page title.
   effect: "flash", // flash | scroll, Flashing or scrolling
@@ -70,24 +87,26 @@ const notify = new Notify({
 });
 
 
+
 let count = 0;
 
-export function randomJoke() {
-  let myJoke = jokes[_.random(0, jokes.length - 1)];
-  const emojiBefore = emoji.random().emoji;
-  const emojiAfter = emoji.random().emoji;
-  for (let i = 0; i < _.random(0, 3); i++) {
-    myJoke = emojiBefore + myJoke;
+// 判断网页是否被激活
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    console.log(`网页被激活 count:${count}`);
+    count = 0;
+    notify.faviconClear();
+    notify.setTitle(); // Clear Blinking Show original title
+    notify.close();
+  } else {
+    console.log(`网页被隐藏 count:${count}`);
   }
-  for (let i = 0; i < _.random(0, 2); i++) {
-    myJoke = myJoke + emojiAfter;
-  }
-  return myJoke;
-}
+});
+
 
 export async function newNotify(desktopTitle: string, desktopBody: string) {
   ++count;
-  console.log("notifyUtils newNotify 推送消息");
+  console.log(`notifyUtils newNotify 推送消息 count:${count}`);
   const customizeTheme = useCustomizeThemeStore();
   const joke = randomJoke();
   if (_.isEmpty(desktopBody)) {
@@ -119,15 +138,6 @@ export async function newNotify(desktopTitle: string, desktopBody: string) {
   // 播放声音
   // notify.player();
 }
-
-
-export async function closeNotify() {
-  count = 0;
-  notify.faviconClear();
-  notify.setTitle(); // Clear Blinking Show original title
-  notify.close();
-}
-
 
 export async function hasPermissionNotify() {
   return notify.isPermission();
