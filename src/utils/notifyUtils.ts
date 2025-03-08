@@ -104,7 +104,15 @@ document.addEventListener('visibilitychange', function() {
 });
 
 
+let notifyTime = new Date().getTime();
 export async function newNotify(desktopTitle: string, desktopBody: string) {
+  const currentTime = new Date().getTime();
+  // 1分钟只通知一次
+  if (currentTime - notifyTime < 60 * 1000) {
+    return;
+  }
+  notifyTime = currentTime;
+
   ++count;
   console.log(`notifyUtils newNotify 推送消息 count:${count}`);
   const customizeTheme = useCustomizeThemeStore();

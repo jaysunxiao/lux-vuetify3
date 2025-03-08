@@ -53,6 +53,7 @@ export const useNewsStore = defineStore("newsStore", {
     newsLevelFilterValue: 5,
     chatMessageId: 0,
 
+    newNotices: [],
     online: false,
     ip: "local",
     region: "",
@@ -114,5 +115,13 @@ export const useNewsStore = defineStore("newsStore", {
       }
       return _.maxBy(this.newsInfos, it => it.id).id;
     },
+
+    addNewNotice(content: string) {
+      const array = [content];
+      this.newNotices = _.concat(array, this.newNotices);
+      if (this.newNotices.length > 30) {
+        this.newNotices = _.drop(this.newNotices, 10);
+      }
+    }
   }
 });

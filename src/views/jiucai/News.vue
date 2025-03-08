@@ -128,13 +128,7 @@ async function requestNews() {
   endId = response.endId;
 }
 
-let notifyTime = new Date().getTime();
 function notifyNews(news: Array<News>) {
-  const currentTime = new Date().getTime();
-  // 1分钟只通知一次
-  if (currentTime - notifyTime < 60 * 1000) {
-    return;
-  }
   const first = _.first(news.filter(it => it.level == "S" || it.level == "A").filter(it => newsStore.isNew(it.id)));
   if (_.isEmpty(first)) {
     return;
@@ -142,7 +136,8 @@ function notifyNews(news: Array<News>) {
   if (myStore.newsNotify) {
     newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content)
   }
-  notifyTime = currentTime;
+  newsStore.addNewNotice(`${first.level}级情报 - ${first.title} - ${first.content}`)
+  myStore.newNoticeDialog = true;
 }
 
 async function loadMoreNews() {
@@ -189,12 +184,37 @@ async function requestTrending() {
   const request = new TrendingRequest();
   const response: TrendingResponse = await asyncAsk(request)
   douyinTrendingRef.value = response.douyin;
-  dfcfTrendingRef.value = response.dfcf2;
-  bloomBergTrendingRef.value = response.bloomBerg;
-  reutersTrendingRef.value = response.reuters;
 
+  newTrending(dfcfTrendingRef.value, response.dfcf2);
+  dfcfTrendingRef.value = response.dfcf2;
+  newTrending(bloomBergTrendingRef.value, response.bloomBerg);
+  bloomBergTrendingRef.value = response.bloomBerg;
+  newTrending(reutersTrendingRef.value, response.reuters);
+  reutersTrendingRef.value = response.reuters;
+  newTrending(xueqiuTrendingRef.value, response.dfcf1);
+  newTrending(xueqiuTrendingRef.value, response.xueqiu);
   response.xueqiu.forEach(it => it.subTitle = "雪球");
   xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => it.ctime);
+}
+
+function newTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>, type: string) {
+  if (_.isEmpty(oldTrending)) {
+    return;
+  }
+  if (!myStore.newsNotify) {
+    return;
+  }
+
+  for (const trending of newTrending) {
+    if (oldTrending.findIndex(it => it.url == trending.url) < 0) {
+      continue;
+    }
+
+    newNotify(trending.title);
+    newsStore.addNewNotice(`[${type} - ${trending.title}](${trending.url}) - ${trending.subTitle} ${formatTimeAgo(trending.ctime)}`)
+    myStore.newNoticeDialog = true;
+  }
+
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
