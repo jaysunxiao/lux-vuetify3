@@ -6,6 +6,7 @@
 <!--    <BackToTop />-->
     <Snackbar />
     <Announcement />
+    <NewNotice />
     <RewardTip />
     <WeChatLogin />
     <BrowserNotify />
@@ -25,6 +26,7 @@ import { useCustomizeThemeStore } from "@/stores/customizeTheme";
 // import BackToTop from "@/components/common/BackToTop.vue";
 import Snackbar from "@/components/common/Snackbar.vue";
 import Announcement from "@/views/jiucai/dialog/Announcement.vue";
+import NewNotice from "@/views/jiucai/dialog/NewNotice.vue";
 import RewardTip from "@/views/jiucai/dialog/RewardTip.vue";
 import WeChatLogin from "@/views/jiucai/dialog/WeChatLogin.vue";
 import BrowserNotify from "@/views/jiucai/dialog/BrowserNotify.vue";

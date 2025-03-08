@@ -17,6 +17,7 @@ export const useMyStore = defineStore("myStore", {
     profileDialog: false,
     adminDialog: false,
     settingDialog: false,
+    newNoticeDialog: false,
     token: "",
     user: {
       id: 0,
