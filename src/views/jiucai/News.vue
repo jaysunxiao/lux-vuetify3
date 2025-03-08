@@ -642,11 +642,11 @@ function formatTimeAgo(timestamp) {
           </v-table>
         </v-card-text>
       </v-card>
-      <v-card v-if="!_.isEmpty(xueqiuTrendingRef)" class="mt-3">
+      <v-card v-if="!_.isEmpty(reutersTrendingRef)" class="mt-3">
         <v-card-title>
-          <v-icon icon="mdi-snowflake"></v-icon>
+          <v-icon icon="mdi-routes"></v-icon>
           &nbsp;
-          雪球
+          路透社
           &nbsp;
         </v-card-title>
         <v-card-text>
@@ -654,7 +654,33 @@ function formatTimeAgo(timestamp) {
             <thead>
             <tr>
               <th>
-                雪球话题
+                路透社实时电报
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+              <td :class="trendingClass(trending)">
+                {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+      </v-card>
+      <v-card v-if="!_.isEmpty(xueqiuTrendingRef)" class="mt-3">
+        <v-card-title>
+          <v-icon icon="mdi-snowflake"></v-icon>
+          &nbsp;
+          东方财富 & 雪球 & 财联社
+          &nbsp;
+        </v-card-title>
+        <v-card-text>
+          <v-table density="compact">
+            <thead>
+            <tr>
+              <th>
+                智能聚合
               </th>
             </tr>
             </thead>
@@ -682,9 +708,6 @@ function formatTimeAgo(timestamp) {
               <th>
                 策略报告
               </th>
-              <th>
-                媒体
-              </th>
             </tr>
             </thead>
             <tbody>
@@ -692,7 +715,6 @@ function formatTimeAgo(timestamp) {
               <td :class="trendingClass(trending)">
                 <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
               </td>
-              <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>
             </tr>
             </tbody>
           </v-table>
