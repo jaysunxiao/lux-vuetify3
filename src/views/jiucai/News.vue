@@ -206,7 +206,7 @@ function newTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>,
   }
 
   for (const trending of newTrending) {
-    if (oldTrending.findIndex(it => it.url == trending.url) < 0) {
+    if (oldTrending.findIndex(it => it.url == trending.url) >= 0) {
       continue;
     }
 
