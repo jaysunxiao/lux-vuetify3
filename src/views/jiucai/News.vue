@@ -45,11 +45,10 @@ const eastMoneyRanksRef = ref<EastMoneyRank[]>([]);
 const conceptCoreRef = ref<string>('');
 const rankCoreCoreRef = ref<string>('');
 const douyinTrendingRef = ref<Trending[]>([]);
-const weiboTrendingRef = ref<Trending[]>([]);
 const xueqiuTrendingRef = ref<Trending[]>([]);
-const dfcf1TrendingRef = ref<Trending[]>([]);
-const dfcf2TrendingRef = ref<Trending[]>([]);
+const dfcfTrendingRef = ref<Trending[]>([]);
 const bloomBergTrendingRef = ref<Trending[]>([]);
+const reutersTrendingRef = ref<Trending[]>([]);
 const loadingRef = ref(true);
 const floatingButtonRef = ref(false);
 let endId = -1;
@@ -190,11 +189,12 @@ async function requestTrending() {
   const request = new TrendingRequest();
   const response: TrendingResponse = await asyncAsk(request)
   douyinTrendingRef.value = response.douyin;
-  weiboTrendingRef.value = response.weibo;
-  xueqiuTrendingRef.value = response.xueqiu;
-  dfcf1TrendingRef.value = response.dfcf1;
-  dfcf2TrendingRef.value = response.dfcf2;
+  dfcfTrendingRef.value = response.dfcf2;
   bloomBergTrendingRef.value = response.bloomBerg;
+  reutersTrendingRef.value = response.reuters;
+
+  response.xueqiu.forEach(it => it.subTitle = "雪球");
+  xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => it.ctime);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -450,7 +450,7 @@ async function goToUrl(trending: Trending, event: Event, go: boolean = true) {
   if (go) {
     setTimeout(() => {
       window.open(trending.url, '_blank');
-    }, 1000);
+    }, 300);
   }
 }
 
@@ -642,32 +642,6 @@ function formatTimeAgo(timestamp) {
           </v-table>
         </v-card-text>
       </v-card>
-      <v-card v-if="!_.isEmpty(dfcf1TrendingRef)" class="mt-3">
-        <v-card-title>
-          <v-icon icon="mdi-parachute-outline"></v-icon>
-          &nbsp;
-          东方财富
-          &nbsp;
-        </v-card-title>
-        <v-card-text>
-          <v-table density="compact">
-            <thead>
-            <tr>
-              <th>
-                板块聚焦
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(trending, i) in dfcf1TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
-              <td :class="trendingClass(trending)">
-                {{ i + 1 }}.{{ trending.title }}
-              </td>
-            </tr>
-            </tbody>
-          </v-table>
-        </v-card-text>
-      </v-card>
       <v-card v-if="!_.isEmpty(xueqiuTrendingRef)" class="mt-3">
         <v-card-title>
           <v-icon icon="mdi-snowflake"></v-icon>
@@ -694,7 +668,7 @@ function formatTimeAgo(timestamp) {
           </v-table>
         </v-card-text>
       </v-card>
-      <v-card v-if="!_.isEmpty(dfcf2TrendingRef)" class="mt-3">
+      <v-card v-if="!_.isEmpty(dfcfTrendingRef)" class="mt-3">
         <v-card-title>
           <v-icon icon="mdi-party-popper"></v-icon>
           &nbsp;
@@ -714,37 +688,11 @@ function formatTimeAgo(timestamp) {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in dfcf2TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
+            <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
               <td :class="trendingClass(trending)">
                 <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
               </td>
               <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>
-            </tr>
-            </tbody>
-          </v-table>
-        </v-card-text>
-      </v-card>
-      <v-card v-if="!_.isEmpty(weiboTrendingRef)" class="mt-3">
-        <v-card-title>
-          <v-icon icon="mdi-sina-weibo"></v-icon>
-          &nbsp;
-          微博
-          &nbsp;
-        </v-card-title>
-        <v-card-text>
-          <v-table density="compact">
-            <thead>
-            <tr>
-              <th>
-                微博热搜
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(trending, i) in weiboTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
-              <td :class="trendingClass(trending)">
-                {{ i + 1 }}.{{ trending.title }}
-              </td>
             </tr>
             </tbody>
           </v-table>
@@ -936,7 +884,7 @@ function formatTimeAgo(timestamp) {
         </template>
         <v-container>
           <v-row>
-            <v-col cols="5">
+            <v-col cols="6">
               <v-card>
                 <v-card-title>
                   <v-icon icon="mdi-chart-bell-curve"></v-icon>
@@ -964,12 +912,12 @@ function formatTimeAgo(timestamp) {
                 </v-card-text>
               </v-card>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="6">
               <v-card>
                 <v-card-title>
-                  <v-icon icon="mdi-parachute-outline"></v-icon>
+                  <v-icon icon="mdi-routes"></v-icon>
                   &nbsp;
-                  东方财富
+                  路透社
                   &nbsp;
                 </v-card-title>
                 <v-card-text>
@@ -977,51 +925,15 @@ function formatTimeAgo(timestamp) {
                     <thead>
                     <tr>
                       <th>
-                        板块聚焦
-                      </th>
-                      <th>
-                        媒体
+                        路透社实时电报
                       </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in dfcf1TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+                    <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
                       <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }} - {{ formatTimeAgo(trending.ctime) }}
+                        {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
                       </td>
-                      <td>{{ trending.subTitle }}</td>
-                    </tr>
-                    </tbody>
-                  </v-table>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="3">
-              <v-card>
-                <v-card-title>
-                  <v-icon icon="mdi-snowflake"></v-icon>
-                  &nbsp;
-                  雪球
-                  &nbsp;
-                </v-card-title>
-                <v-card-text>
-                  <v-table density="compact">
-                    <thead>
-                    <tr>
-                      <th>
-                        雪球话题
-                      </th>
-                      <!--                      <th>-->
-                      <!--                        创作者-->
-                      <!--                      </th>-->
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
-                      <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }}
-                      </td>
-                      <!--                      <td>{{ trending.subTitle }}</td>-->
                     </tr>
                     </tbody>
                   </v-table>
@@ -1031,6 +943,38 @@ function formatTimeAgo(timestamp) {
           </v-row>
           <v-row>
             <v-col cols="5">
+              <v-card>
+                <v-card-title>
+                  <v-icon icon="mdi-snowflake"></v-icon>
+                  &nbsp;
+                  东方财富 & 雪球 & 财联社
+                  &nbsp;
+                </v-card-title>
+                <v-card-text>
+                  <v-table density="compact">
+                    <thead>
+                    <tr>
+                      <th>
+                        智能聚合
+                      </th>
+                      <th>
+                        来源
+                      </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+                      <td :class="trendingClass(trending)">
+                        {{ i + 1 }}.{{ trending.title }}
+                      </td>
+                      <td>{{ trending.subTitle }}</td>
+                    </tr>
+                    </tbody>
+                  </v-table>
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="4">
               <v-card>
                 <v-card-title>
                   <v-icon icon="mdi-party-popper"></v-icon>
@@ -1045,49 +989,17 @@ function formatTimeAgo(timestamp) {
                       <th>
                         策略报告
                       </th>
-                      <th>
-                        媒体
-                      </th>
+                      <!--                      <th>-->
+                      <!--                        媒体-->
+                      <!--                      </th>-->
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in dfcf2TrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
+                    <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
                       <td :class="trendingClass(trending)">
                         <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
                       </td>
-                      <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>
-                    </tr>
-                    </tbody>
-                  </v-table>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="4">
-              <v-card>
-                <v-card-title>
-                  <v-icon icon="mdi-sina-weibo"></v-icon>
-                  &nbsp;
-                  微博
-                  &nbsp;
-                </v-card-title>
-                <v-card-text>
-                  <v-table density="compact">
-                    <thead>
-                    <tr>
-                      <th>
-                        微博热搜
-                      </th>
-                      <th>
-                        分类&热度
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(trending, i) in weiboTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
-                      <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }}
-                      </td>
-                      <td>{{ trending.subTitle }}</td>
+                      <!--                      <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>-->
                     </tr>
                     </tbody>
                   </v-table>

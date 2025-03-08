@@ -484,7 +484,7 @@ const handleKeydown = (e) => {
       </v-row>
       <v-row v-if="message.type === 'provider' || message.type === 'consumer' || message.type === 'create' || message.type === 'update'">
         <v-col cols="12" md="11">
-          如果超过2分钟无响应，则考虑刷新页面换一个提示词
+          如果超过2分钟无响应，则考虑刷新页面换一个提示词；都不行的话在聊天室里说一下，站长看到问题会及时处理
           <v-progress-linear
             v-model="message.progress"
             height="8"

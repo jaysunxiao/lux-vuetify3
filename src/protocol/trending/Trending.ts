@@ -11,7 +11,7 @@ class Trending {
 
 export class TrendingRegistration implements IProtocolRegistration<Trending> {
     protocolId(): number {
-        return 427;
+        return 432;
     }
 
     write(buffer: IByteBuffer, packet: Trending | null) {

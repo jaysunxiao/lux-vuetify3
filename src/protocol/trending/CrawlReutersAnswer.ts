@@ -3,32 +3,32 @@ import IProtocolRegistration from '../IProtocolRegistration';
 import Trending from './Trending';
 
 
-class SaveBloomBergAsk {
+class CrawlReutersAnswer {
     trending: Array<Trending> = [];
 }
 
-export class SaveBloomBergAskRegistration implements IProtocolRegistration<SaveBloomBergAsk> {
+export class CrawlReutersAnswerRegistration implements IProtocolRegistration<CrawlReutersAnswer> {
     protocolId(): number {
-        return 420;
+        return 425;
     }
 
-    write(buffer: IByteBuffer, packet: SaveBloomBergAsk | null) {
+    write(buffer: IByteBuffer, packet: CrawlReutersAnswer | null) {
         if (packet === null) {
             buffer.writeInt(0);
             return;
         }
         buffer.writeInt(-1);
-        buffer.writePacketList(packet.trending, 427);
+        buffer.writePacketList(packet.trending, 432);
     }
 
-    read(buffer: IByteBuffer): SaveBloomBergAsk | null {
+    read(buffer: IByteBuffer): CrawlReutersAnswer | null {
         const length = buffer.readInt();
         if (length === 0) {
             return null;
         }
         const beforeReadIndex = buffer.getReadOffset();
-        const packet = new SaveBloomBergAsk();
-        const list0 = buffer.readPacketList(427);
+        const packet = new CrawlReutersAnswer();
+        const list0 = buffer.readPacketList(432);
         packet.trending = list0;
         if (length > 0) {
             buffer.setReadOffset(beforeReadIndex + length);
@@ -37,4 +37,4 @@ export class SaveBloomBergAskRegistration implements IProtocolRegistration<SaveB
     }
 }
 
-export default SaveBloomBergAsk;
+export default CrawlReutersAnswer;

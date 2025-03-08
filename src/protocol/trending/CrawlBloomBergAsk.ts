@@ -2,33 +2,31 @@ import IByteBuffer from '../IByteBuffer';
 import IProtocolRegistration from '../IProtocolRegistration';
 
 
-class SaveBloomBergAnswer {
-    message: string = '';
+class CrawlBloomBergAsk {
+    
 }
 
-export class SaveBloomBergAnswerRegistration implements IProtocolRegistration<SaveBloomBergAnswer> {
+export class CrawlBloomBergAskRegistration implements IProtocolRegistration<CrawlBloomBergAsk> {
     protocolId(): number {
-        return 421;
+        return 422;
     }
 
-    write(buffer: IByteBuffer, packet: SaveBloomBergAnswer | null) {
+    write(buffer: IByteBuffer, packet: CrawlBloomBergAsk | null) {
         if (packet === null) {
             buffer.writeInt(0);
             return;
         }
         buffer.writeInt(-1);
-        buffer.writeString(packet.message);
     }
 
-    read(buffer: IByteBuffer): SaveBloomBergAnswer | null {
+    read(buffer: IByteBuffer): CrawlBloomBergAsk | null {
         const length = buffer.readInt();
         if (length === 0) {
             return null;
         }
         const beforeReadIndex = buffer.getReadOffset();
-        const packet = new SaveBloomBergAnswer();
-        const result0 = buffer.readString();
-        packet.message = result0;
+        const packet = new CrawlBloomBergAsk();
+        
         if (length > 0) {
             buffer.setReadOffset(beforeReadIndex + length);
         }
@@ -36,4 +34,4 @@ export class SaveBloomBergAnswerRegistration implements IProtocolRegistration<Sa
     }
 }
 
-export default SaveBloomBergAnswer;
+export default CrawlBloomBergAsk;
