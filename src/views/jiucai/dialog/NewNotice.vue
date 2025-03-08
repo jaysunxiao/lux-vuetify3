@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/preview.css';
-import axios from "axios";
 import _ from "lodash";
+import {useNewsStore} from "@/stores/newsStore";
 import {useMyStore} from "@/stores/myStore";
 import {useDisplay} from "vuetify";
 import {useSnackbarStore} from "@/stores/snackbarStore";
@@ -10,47 +10,25 @@ import { useCustomizeThemeStore } from "@/stores/customizeTheme";
 
 const {mobile, width, height} = useDisplay();
 const myStore = useMyStore();
+const newsStore = useNewsStore();
+
 const customizeTheme = useCustomizeThemeStore();
 const snackbarStore = useSnackbarStore();
 
-const boardRef = ref<string>("");
-
-const announcementUrl = import.meta.env.VITE_BASE_HTTP_URL + "/config/myconfig.json";
-
-onMounted(async () => {
-  const response = await axios.get(announcementUrl);
-  console.log(response);
-  const currentVersion = myStore.announce.version;
-  const announcement = response.data;
-  myStore.announce = announcement;
-  if (_.isEqual(announcement.version, currentVersion)) {
-    // 是否要弹出赞赏
-    const now = new Date().getTime();
-    if (now - myStore.lastForceShow < 3 * 24 * 60 * 60 * 1000) {
-      return;
-    }
-    myStore.rewardTipDialog = true;
-    myStore.lastForceShow = now;
-    return;
-  }
-
-  // 拉取公告
-  const boardResponse = await axios.get(import.meta.env.VITE_BASE_HTTP_URL + announcement.board);
-  const boardMd = boardResponse.data;
-  boardRef.value = boardMd;
-  dialogRef.value = true;
+const requestMessages = computed(() => {
+  return _.join(newsStore.newNotices, "<hr>");
 });
 
 </script>
 <template>
-  <v-dialog transition="dialog-top-transition" width="888px" v-model="myStore.newNoticeDialog">
+  <v-dialog transition="dialog-top-transition" width="60vw" v-model="myStore.newNoticeDialog">
     <template v-slot:default="{ isActive }">
       <v-card prepend-icon="mdi-newspaper-variant-outline">
         <template v-slot:title>
           最新消息汇总
         </template>
         <v-card-text>
-          <md-preview v-model="boardRef" editor-id="preview-only"/>
+          <md-preview v-model="requestMessages" editor-id="preview-only"/>
         </v-card-text>
       </v-card>
     </template>

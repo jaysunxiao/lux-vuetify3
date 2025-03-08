@@ -185,14 +185,14 @@ async function requestTrending() {
   const response: TrendingResponse = await asyncAsk(request)
   douyinTrendingRef.value = response.douyin;
 
-  newTrending(dfcfTrendingRef.value, response.dfcf2);
+  newTrending(dfcfTrendingRef.value, response.dfcf2, "研报");
   dfcfTrendingRef.value = response.dfcf2;
-  newTrending(bloomBergTrendingRef.value, response.bloomBerg);
+  newTrending(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
   bloomBergTrendingRef.value = response.bloomBerg;
-  newTrending(reutersTrendingRef.value, response.reuters);
+  newTrending(reutersTrendingRef.value, response.reuters, "路透社");
   reutersTrendingRef.value = response.reuters;
-  newTrending(xueqiuTrendingRef.value, response.dfcf1);
   newTrending(xueqiuTrendingRef.value, response.xueqiu);
+  newTrending(xueqiuTrendingRef.value, response.dfcf1);
   response.xueqiu.forEach(it => it.subTitle = "雪球");
   xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => it.ctime);
 }
@@ -211,7 +211,11 @@ function newTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>,
     }
 
     newNotify(trending.title);
-    newsStore.addNewNotice(`[${type} - ${trending.title}](${trending.url}) - ${trending.subTitle} ${formatTimeAgo(trending.ctime)}`)
+    if (_.isEmpty(type)) {
+      newsStore.addNewNotice(`${trending.subTitle} - [${trending.title}](${trending.url}) - ${formatTimeAgo(trending.ctime)}`);
+    } else {
+      newsStore.addNewNotice(`${type} - [${trending.title}](${trending.url}) - ${trending.subTitle} - ${formatTimeAgo(trending.ctime)}`);
+    }
     myStore.newNoticeDialog = true;
   }
 
