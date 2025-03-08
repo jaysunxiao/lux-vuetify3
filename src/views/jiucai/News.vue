@@ -107,7 +107,7 @@ async function doInitNews() {
   startId = _.last(response.news).id;
   endId = response.endId;
   snackbarStore.showSuccessMessage("情报初始化成功");
-  notifyNews(response.news);
+  newNoticeNews(response.news);
 }
 
 async function requestNews() {
@@ -122,13 +122,13 @@ async function requestNews() {
   if (response.endId == endId) {
     return;
   }
-  notifyNews(response.news);
+  newNoticeNews(response.news);
   const newNews = _.concat(response.news, newsRef.value);
   newsRef.value = newNews;
   endId = response.endId;
 }
 
-function notifyNews(news: Array<News>) {
+function newNoticeNews(news: Array<News>) {
   const first = _.first(news.filter(it => it.level == "S" || it.level == "A").filter(it => newsStore.isNew(it.id)));
   if (_.isEmpty(first)) {
     return;
@@ -169,6 +169,7 @@ async function requestConcepts(num: number, notice: boolean = false) {
   if (notice) {
     snackbarStore.showSuccessMessage("加载了更多的新概念");
   }
+  newNoticeConcepts(conceptsRef.value, response.concepts);
 }
 
 async function requestRanks(num: number) {
@@ -185,19 +186,38 @@ async function requestTrending() {
   const response: TrendingResponse = await asyncAsk(request)
   douyinTrendingRef.value = response.douyin;
 
-  newTrending(dfcfTrendingRef.value, response.dfcf2, "研报");
+  newNoticeTrending(dfcfTrendingRef.value, response.dfcf2, "研报");
   dfcfTrendingRef.value = response.dfcf2;
-  newTrending(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
+  newNoticeTrending(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
   bloomBergTrendingRef.value = response.bloomBerg;
-  newTrending(reutersTrendingRef.value, response.reuters, "路透社");
+  newNoticeTrending(reutersTrendingRef.value, response.reuters, "路透社");
   reutersTrendingRef.value = response.reuters;
-  newTrending(xueqiuTrendingRef.value, response.xueqiu);
-  newTrending(xueqiuTrendingRef.value, response.dfcf1);
+  newNoticeTrending(xueqiuTrendingRef.value, response.xueqiu);
+  newNoticeTrending(xueqiuTrendingRef.value, response.dfcf1);
   response.xueqiu.forEach(it => it.subTitle = "雪球");
   xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => it.ctime);
 }
 
-function newTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>, type: string) {
+function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Concept>) {
+  if (_.isEmpty(oldConcepts)) {
+    return;
+  }
+  if (!myStore.newsNotify) {
+    return;
+  }
+
+  for (const concept of newConcepts) {
+    if (oldConcepts.findIndex(it => it.url == concept.url) >= 0) {
+      continue;
+    }
+
+    newNotify(concept.title);
+    newsStore.addNewNotice(`${concept.level} - [${concept.title}](${concept.url}) - ${formatTimeAgo(concept.ctime)}`);
+    myStore.newNoticeDialog = true;
+  }
+}
+
+function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>, type: string) {
   if (_.isEmpty(oldTrending)) {
     return;
   }
@@ -218,7 +238,6 @@ function newTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>,
     }
     myStore.newNoticeDialog = true;
   }
-
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
