@@ -24,7 +24,7 @@ import clipboard from "@/utils/clipboardUtils";
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {useMyStore} from "@/stores/myStore";
 import {useNewsStore, levelMap} from "@/stores/newsStore";
-import {parseTime, getFormatDate, getFormatMonth} from "@/utils/timeUtils";
+import {parseTime, formatTimeAgo, getFormatMonth} from "@/utils/timeUtils";
 import {randomEmotion, randomQuoteWithWebSite} from "@/utils/quoteUtils";
 import Chart from 'chart.js/auto';
 import {newNotify} from "@/utils/notifyUtils";
@@ -134,7 +134,7 @@ function newNoticeNews(news: Array<News>) {
   }
   if (myStore.newsNotify) {
     newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content);
-    newsStore.addNewNotice(`${first.level}级情报 - ${first.title} - ${first.content}`, first.ctime);
+    newsStore.addNewNotice(`${first.level}级情报`, _.isEmpty(first.title) ? first.content : first.title, first.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -211,7 +211,7 @@ function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Conce
     }
 
     newNotify(concept.title);
-    newsStore.addNewNotice(`${concept.level} - [${concept.title}](${concept.url}) - ${formatTimeAgo(concept.ctime)}`, concept.ctime);
+    newsStore.addNewNotice(concept.title, concept.content, concept.ctime, concept.url);
     myStore.newNoticeDialog = true;
   }
 }
@@ -231,9 +231,9 @@ function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Tren
 
     newNotify(trending.title);
     if (_.isEmpty(type)) {
-      newsStore.addNewNotice(`${trending.subTitle} - [${trending.title}](${trending.url}) - ${formatTimeAgo(trending.ctime)}`, trending.ctime);
+      newsStore.addNewNotice(trending.title, trending.subTitle, trending.ctime, trending.url);
     } else {
-      newsStore.addNewNotice(`${type} - [${trending.title}](${trending.url}) - ${trending.subTitle} - ${formatTimeAgo(trending.ctime)}`, trending.ctime);
+      newsStore.addNewNotice(trending.title, trending.subTitle, trending.ctime, trending.url);
     }
     myStore.newNoticeDialog = true;
   }
@@ -562,33 +562,6 @@ function copyNews(news: News, event: Event) {
   snackbarStore.showSuccessMessage("复制成功");
 }
 
-function formatTimeAgo(timestamp) {
-  // 获取当前时间的时间戳（单位为毫秒）
-  const now = Date.now();
-  // 计算时间差（单位为毫秒）
-  const diff = now - timestamp;
-
-  // 将时间差转换为秒
-  const diffInSeconds = Math.floor(diff / 1000);
-
-  // 根据时间差的大小，格式化输出
-  if (diffInSeconds < 60) {
-    // 不足1分钟
-    return `${diffInSeconds}秒前`;
-  } else if (diffInSeconds < 3600) {
-    // 不足1小时
-    const minutes = Math.floor(diffInSeconds / 60);
-    return `${minutes}分钟前`;
-  } else if (diffInSeconds < 86400) {
-    // 不足1天
-    const hours = Math.floor(diffInSeconds / 3600);
-    return `${hours}小时前`;
-  } else {
-    // 1天及以上
-    const days = Math.floor(diffInSeconds / 86400);
-    return `${days}天前`;
-  }
-}
 
 </script>
 

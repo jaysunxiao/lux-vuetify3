@@ -1,46 +1,25 @@
 <script setup lang="ts">
-import { MdPreview, config } from 'md-editor-v3';
-import 'md-editor-v3/lib/preview.css';
-import LinkAttr from 'markdown-it-link-attributes';
 import _ from "lodash";
 import {useNewsStore} from "@/stores/newsStore";
 import {useMyStore} from "@/stores/myStore";
 import {useDisplay} from "vuetify";
-import {useSnackbarStore} from "@/stores/snackbarStore";
-import { useCustomizeThemeStore } from "@/stores/customizeTheme";
+import {parseTime, formatTimeAgo} from "@/utils/timeUtils";
+import {randomQuoteWithWebSite} from "@/utils/quoteUtils";
+import clipboard from "@/utils/clipboardUtils";
 
 const {mobile, width, height} = useDisplay();
 const myStore = useMyStore();
 const newsStore = useNewsStore();
 
-const customizeTheme = useCustomizeThemeStore();
-const snackbarStore = useSnackbarStore();
-
-config({
-  markdownItPlugins(plugins) {
-    return [
-      ...plugins,
-      {
-        type: 'linkAttr',
-        plugin: LinkAttr,
-        options: {
-          matcher(href: string) {
-            // 如果使用了markdown-it-anchor
-            // 应该忽略标题头部的锚点链接
-            return !href.startsWith('#');
-          },
-          attrs: {
-            target: '_blank',
-          },
-        },
-      },
-    ];
-  },
-});
-
-const requestMessages = computed(() => {
-  return _.join(newsStore.newNotices.map(it => it.content), "<hr>");
-});
+async function copy(title: string, subTitle: string, ctime: number, url: string, event: Event) {
+  let str = title + " - " + subTitle + " - " + parseTime(ctime) + "\n\n";
+  if (!_.isEmpty(url)) {
+    str = str + url + "\n\n";
+  }
+  str = str + randomQuoteWithWebSite();
+  clipboard(str, event);
+  snackbarStore.showSuccessMessage("复制成功");
+}
 
 </script>
 <template>
@@ -48,10 +27,40 @@ const requestMessages = computed(() => {
     <template v-slot:default="{ isActive }">
       <v-card prepend-icon="mdi-newspaper-variant-outline">
         <template v-slot:title>
-          上帝视角
+          情报聚合
         </template>
         <v-card-text>
-          <md-preview v-model="requestMessages" editor-id="preview-only"/>
+          <v-table density="compact">
+            <thead>
+            <tr>
+              <th>
+                信源
+              </th>
+              <th>
+                内容
+              </th>
+              <th>
+                时间
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(newNotice, i) in newsStore.newNotices" :key="i" class="cursor-pointer" v-ripple @click="copy(newNotice.title, newNotice.subTitle, newNotice.ctime, newNotice.url, $event)">
+              <td>
+                {{ newNotice.title }}
+              </td>
+              <td v-if="_.isEmpty(newNotice.url)">
+                <a :href="newNotice.url" referrerPolicy="no-referrer" target="_blank">{{ newNotice.subTitle }}</a>
+              </td>
+              <td v-else>
+                {{ newNotice.subTitle }}
+              </td>
+              <td>
+                {{ formatTimeAgo(newNotice.ctime) }}
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
         </v-card-text>
       </v-card>
     </template>
