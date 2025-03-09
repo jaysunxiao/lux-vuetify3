@@ -919,7 +919,7 @@ function copyNews(news: News, event: Event) {
         <v-container>
           <v-row>
             <v-col cols="6">
-              <v-card>
+              <v-card v-tooltip:start="'黑色粗体为一天内的资讯'">
                 <v-card-title>
                   <v-icon icon="mdi-chart-bell-curve"></v-icon>
                   &nbsp;
@@ -947,7 +947,7 @@ function copyNews(news: News, event: Event) {
               </v-card>
             </v-col>
             <v-col cols="6">
-              <v-card>
+              <v-card v-tooltip:start="'黑色粗体为一天内的电报'">
                 <v-card-title>
                   <v-icon icon="mdi-routes"></v-icon>
                   &nbsp;
