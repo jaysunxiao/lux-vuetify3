@@ -32,6 +32,7 @@
     "focus-trap": "^7.4.0",
     "happy-dom": "^9.6.1",
     "js-file-downloader": "^1.1.25",
+    "markdown-it-link-attributes": "^4.0.1",
     "md-editor-v3": "^4.8.2",
     "microsoft-cognitiveservices-speech-sdk": "^1.27.0",
     "moment": "^2.29.4",
