@@ -670,7 +670,7 @@ function formatTimeAgo(timestamp) {
             <thead>
             <tr>
               <th>
-                彭博社头条新闻
+                独家资讯
               </th>
             </tr>
             </thead>
@@ -696,7 +696,7 @@ function formatTimeAgo(timestamp) {
             <thead>
             <tr>
               <th>
-                路透社实时电报
+                内幕电报
               </th>
             </tr>
             </thead>
@@ -961,7 +961,7 @@ function formatTimeAgo(timestamp) {
                     <thead>
                     <tr>
                       <th>
-                        彭博社头条新闻
+                        独家资讯
                       </th>
                     </tr>
                     </thead>
@@ -989,7 +989,7 @@ function formatTimeAgo(timestamp) {
                     <thead>
                     <tr>
                       <th>
-                        路透社实时电报
+                        内幕电报
                       </th>
                     </tr>
                     </thead>
