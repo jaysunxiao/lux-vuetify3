@@ -25,7 +25,7 @@ function atNewsSearchResponse(packet: NewsSearchResponse) {
 
 </script>
 <template>
-  <v-dialog transition="dialog-top-transition" max-width="1100px" v-model="newsStore.newsSearchDialog" scrollable>
+  <v-dialog transition="dialog-top-transition" max-width="60vw" v-model="newsStore.newsSearchDialog" scrollable>
       <v-card class="mt-3">
         <v-card-title class="text-h5">
           <v-icon icon="mdi-cloud-search-outline" color="primary"></v-icon>

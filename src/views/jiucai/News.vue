@@ -107,7 +107,6 @@ async function doInitNews() {
   startId = _.last(response.news).id;
   endId = response.endId;
   snackbarStore.showSuccessMessage("情报初始化成功");
-  newNoticeNews(response.news);
 }
 
 async function requestNews() {
@@ -135,9 +134,9 @@ function newNoticeNews(news: Array<News>) {
   }
   if (myStore.newsNotify) {
     newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content)
+    newsStore.addNewNotice(`${first.level}级情报 - ${first.title} - ${first.content}`)
+    myStore.newNoticeDialog = true;
   }
-  newsStore.addNewNotice(`${first.level}级情报 - ${first.title} - ${first.content}`)
-  myStore.newNoticeDialog = true;
 }
 
 async function loadMoreNews() {
@@ -501,7 +500,7 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 function scrollToMiddle() {
-  window.scrollTo({ top: document.documentElement.scrollHeight / 1.8, behavior: "smooth" });
+  window.scrollTo({ top: document.documentElement.scrollHeight / 1.7, behavior: "smooth" });
 }
 function scrollToBottom() {
   window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
