@@ -11,3 +11,5 @@ https://jiucai.fun/index.html
 https://jiucai.fun/assets/
 https://jiucai.fun/config/
 ```
+
+- node版本 v20.13.1
