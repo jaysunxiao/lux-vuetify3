@@ -133,8 +133,9 @@ function newNoticeNews(news: Array<News>) {
     return;
   }
   if (myStore.newsNotify) {
-    newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content);
-    newsStore.addNewNotice(`${first.level}级情报`, _.isEmpty(first.title) ? first.content : first.title, first.ctime);
+    const title = _.isEmpty(first.title) ? first.content : first.title;
+    newNotify(`${first.level}级情报`, title);
+    newsStore.addNewNotice(`${first.level}级情报`, title, first.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -230,11 +231,7 @@ function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Tren
     }
 
     newNotify(trending.title);
-    if (_.isEmpty(type)) {
-      newsStore.addNewNotice(trending.title, trending.subTitle, trending.ctime, trending.url);
-    } else {
-      newsStore.addNewNotice(trending.title, trending.subTitle, trending.ctime, trending.url);
-    }
+    newsStore.addNewNotice(trending.subTitle, trending.title,  trending.ctime, trending.url);
     myStore.newNoticeDialog = true;
   }
 }

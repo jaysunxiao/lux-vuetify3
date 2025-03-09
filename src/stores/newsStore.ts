@@ -116,10 +116,10 @@ export const useNewsStore = defineStore("newsStore", {
       return _.maxBy(this.newsInfos, it => it.id).id;
     },
 
-    addNewNotice(title: string, subTitle: string, ctime: number, url: string) {
+    addNewNotice(source: string, title: string, ctime: number, url: string) {
       const array = [{
+        source: source,
         title: title,
-        subTitle: subTitle,
         ctime: ctime,
         url: url
       }];
