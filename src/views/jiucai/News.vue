@@ -712,7 +712,7 @@ function formatTimeAgo(timestamp) {
       </v-card>
       <v-card v-if="!_.isEmpty(xueqiuTrendingRef)" class="mt-3">
         <v-card-title>
-          <v-icon icon="mdi-snowflake"></v-icon>
+          <v-icon icon="mdi-electron-framework"></v-icon>
           &nbsp;
           东方财富 & 雪球 & 财联社
           &nbsp;
@@ -738,7 +738,7 @@ function formatTimeAgo(timestamp) {
       </v-card>
       <v-card v-if="!_.isEmpty(dfcfTrendingRef)" class="mt-3">
         <v-card-title>
-          <v-icon icon="mdi-party-popper"></v-icon>
+          <v-icon icon="mdi-lightbulb-on-outline"></v-icon>
           &nbsp;
           研报
           &nbsp;
@@ -764,9 +764,9 @@ function formatTimeAgo(timestamp) {
       </v-card>
       <v-card v-if="!_.isEmpty(douyinTrendingRef)" class="mt-3">
         <v-card-title>
-          <v-icon icon="mdi-music-circle"></v-icon>
+          <v-icon icon="mdi-music-circle-outline"></v-icon>
           &nbsp;
-          抖音
+          抖音热榜
           &nbsp;
         </v-card-title>
         <v-card-text>
@@ -774,7 +774,7 @@ function formatTimeAgo(timestamp) {
             <thead>
             <tr>
               <th>
-                抖音热搜榜
+                关键词
               </th>
               <th>
                 热度
@@ -1009,7 +1009,7 @@ function formatTimeAgo(timestamp) {
             <v-col cols="5">
               <v-card>
                 <v-card-title>
-                  <v-icon icon="mdi-snowflake"></v-icon>
+                  <v-icon icon="mdi-electron-framework"></v-icon>
                   &nbsp;
                   东方财富 & 雪球 & 财联社
                   &nbsp;
@@ -1041,7 +1041,7 @@ function formatTimeAgo(timestamp) {
             <v-col cols="4">
               <v-card>
                 <v-card-title>
-                  <v-icon icon="mdi-party-popper"></v-icon>
+                  <v-icon icon="mdi-lightbulb-on-outline"></v-icon>
                   &nbsp;
                   研报
                   &nbsp;
@@ -1073,9 +1073,9 @@ function formatTimeAgo(timestamp) {
             <v-col cols="3">
               <v-card>
                 <v-card-title>
-                  <v-icon icon="mdi-music-circle"></v-icon>
+                  <v-icon icon="mdi-music-circle-outline"></v-icon>
                   &nbsp;
-                  抖音
+                  抖音热榜
                   &nbsp;
                 </v-card-title>
                 <v-card-text>
@@ -1083,7 +1083,7 @@ function formatTimeAgo(timestamp) {
                     <thead>
                     <tr>
                       <th>
-                        抖音热搜榜
+                        关键词
                       </th>
                       <th>
                         热度
