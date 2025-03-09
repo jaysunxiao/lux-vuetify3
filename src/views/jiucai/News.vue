@@ -133,8 +133,8 @@ function newNoticeNews(news: Array<News>) {
     return;
   }
   if (myStore.newsNotify) {
-    newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content)
-    newsStore.addNewNotice(`${first.level}级情报 - ${first.title} - ${first.content}`)
+    newNotify(`${first.level}级情报`, _.isEmpty(first.title) ? first.title : first.content);
+    newsStore.addNewNotice(`${first.level}级情报 - ${first.title} - ${first.content}`, first.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -194,7 +194,7 @@ async function requestTrending() {
   newNoticeTrending(xueqiuTrendingRef.value, response.xueqiu);
   newNoticeTrending(xueqiuTrendingRef.value, response.dfcf1);
   response.xueqiu.forEach(it => it.subTitle = "雪球");
-  xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => it.ctime);
+  xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => -it.ctime);
 }
 
 function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Concept>) {
@@ -211,7 +211,7 @@ function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Conce
     }
 
     newNotify(concept.title);
-    newsStore.addNewNotice(`${concept.level} - [${concept.title}](${concept.url}) - ${formatTimeAgo(concept.ctime)}`);
+    newsStore.addNewNotice(`${concept.level} - [${concept.title}](${concept.url}) - ${formatTimeAgo(concept.ctime)}`, concept.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -231,9 +231,9 @@ function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Tren
 
     newNotify(trending.title);
     if (_.isEmpty(type)) {
-      newsStore.addNewNotice(`${trending.subTitle} - [${trending.title}](${trending.url}) - ${formatTimeAgo(trending.ctime)}`);
+      newsStore.addNewNotice(`${trending.subTitle} - [${trending.title}](${trending.url}) - ${formatTimeAgo(trending.ctime)}`, trending.ctime);
     } else {
-      newsStore.addNewNotice(`${type} - [${trending.title}](${trending.url}) - ${trending.subTitle} - ${formatTimeAgo(trending.ctime)}`);
+      newsStore.addNewNotice(`${type} - [${trending.title}](${trending.url}) - ${trending.subTitle} - ${formatTimeAgo(trending.ctime)}`, trending.ctime);
     }
     myStore.newNoticeDialog = true;
   }

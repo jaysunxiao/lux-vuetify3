@@ -116,9 +116,12 @@ export const useNewsStore = defineStore("newsStore", {
       return _.maxBy(this.newsInfos, it => it.id).id;
     },
 
-    addNewNotice(content: string) {
-      const array = [content];
-      this.newNotices = _.concat(array, this.newNotices);
+    addNewNotice(content: string, ctime: number) {
+      const array = [{
+        content: content,
+        ctime: ctime
+      }];
+      this.newNotices = _.sortBy(_.concat(array, this.newNotices), it => -it.ctime);
       if (this.newNotices.length > 30) {
         this.newNotices = _.drop(this.newNotices, 10);
       }

@@ -16,7 +16,7 @@ const customizeTheme = useCustomizeThemeStore();
 const snackbarStore = useSnackbarStore();
 
 const requestMessages = computed(() => {
-  return _.join(newsStore.newNotices, "<hr>");
+  return _.join(newsStore.newNotices.map(it => it.content), "<hr>");
 });
 
 </script>
