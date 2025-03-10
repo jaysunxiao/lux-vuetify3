@@ -42,7 +42,7 @@ function newNoticeClass(ctime) {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(newNotice, i) in newsStore.newNotices" :key="i" v-ripple>
+            <tr v-for="(newNotice, i) in _.take(newsStore.newNotices, 30)" :key="i" v-ripple>
               <td>
                 {{ formatTimeAgo(newNotice.ctime) }}
               </td>

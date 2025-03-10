@@ -117,6 +117,9 @@ export const useNewsStore = defineStore("newsStore", {
     },
 
     addNewNotice(source: string, title: string, ctime: number, url: string) {
+      if (this.newNotices.findIndex(it => it.url == url) >= 0) {
+        return;
+      }
       const array = [{
         source: source,
         title: title,
@@ -124,8 +127,8 @@ export const useNewsStore = defineStore("newsStore", {
         url: url
       }];
       this.newNotices = _.sortBy(_.concat(array, this.newNotices), it => -it.ctime);
-      if (this.newNotices.length > 30) {
-        this.newNotices = _.drop(this.newNotices, 10);
+      if (this.newNotices.length > 300) {
+        this.newNotices = _.drop(this.newNotices, 100);
       }
     }
   }
