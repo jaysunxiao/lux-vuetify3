@@ -257,11 +257,15 @@ function newNoticeTrendingWithSource(oldTrending: Array<Trending>, newTrending: 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-
+let initMarketFlag = false;
 async function requestMarkets() {
+  if (initMarketFlag) {
+    return;
+  }
   const request = new MarketRequest();
   request.num = 90;
   const response: MarketResponse = await asyncAsk(request);
+  initMarketFlag = true;
 
   const firstMarket = _.first(response.markets);
   const shMarketIndex = firstMarket?.shMarketIndex / 100;
