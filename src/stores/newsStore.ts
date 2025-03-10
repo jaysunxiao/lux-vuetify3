@@ -119,7 +119,7 @@ export const useNewsStore = defineStore("newsStore", {
       return _.maxBy(this.newsInfos, it => it.id).id;
     },
 
-    addNewNotice(source: string, title: string, ctime: number, url: string) {
+    addNewNotice(source: string, title: string, url: string, ctime: number, ) {
       // 主要是过滤研报，研报的排名会经常的变动
       if (new Date().getTime() - ctime >  1 * 24 * 60 * 60 * 1000) {
         return;

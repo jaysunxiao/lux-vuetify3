@@ -49,10 +49,7 @@ function newNoticeClass(ctime) {
               <td>
                 {{ _.truncate(newNotice.source) }}
               </td>
-              <td v-if="_.isEmpty(newNotice.url)" :class="newNoticeClass(newNotice.ctime)">
-                {{ newNotice.title }}
-              </td>
-              <td v-else :class="newNoticeClass(newNotice.ctime)">
+              <td :class="newNoticeClass(newNotice.ctime)">
                 <a :href="newNotice.url" referrerPolicy="no-referrer" target="_blank">{{ newNotice.title }}</a>
               </td>
             </tr>

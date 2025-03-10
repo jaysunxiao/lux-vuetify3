@@ -136,7 +136,7 @@ function newNoticeNews(news: Array<News>) {
     const levelType = levelMap[first.level].type;
     const title = _.isEmpty(first.title) ? first.content : first.title;
     newNotify(`${levelType}级情报`, title);
-    newsStore.addNewNotice(`${levelType}级情报`, title, first.ctime, `https://jiucai.fun/ac/${first.id}`);
+    newsStore.addNewNotice(`${levelType}级情报`, title, `https://jiucai.fun/ac/${first.id}`, first.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -213,7 +213,7 @@ function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Conce
     }
 
     newNotify(concept.title);
-    newsStore.addNewNotice(concept.title, concept.content, concept.ctime, concept.url);
+    newsStore.addNewNotice(concept.title, concept.content, concept.url, concept.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -232,7 +232,7 @@ function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Tren
     }
 
     newNotify(trending.title);
-    newsStore.addNewNotice(trending.subTitle, trending.title,  trending.ctime, trending.url);
+    newsStore.addNewNotice(trending.subTitle, trending.title,  trending.url, trending.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -251,7 +251,7 @@ function newNoticeTrendingWithSource(oldTrending: Array<Trending>, newTrending: 
     }
 
     newNotify(trending.title);
-    newsStore.addNewNotice(source, trending.title + "-" + trending.subTitle,  trending.ctime, trending.url);
+    newsStore.addNewNotice(source, trending.title + "-" + trending.subTitle,  trending.url, trending.ctime);
     myStore.newNoticeDialog = true;
   }
 }
