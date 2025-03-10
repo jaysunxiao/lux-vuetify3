@@ -56,7 +56,7 @@ export const useNewsStore = defineStore("newsStore", {
     newsLevelFilterValue: 5,
     chatMessageId: 0,
 
-    newNotices: Array<NewNotice>,
+    newNotices: new Array<NewNotice>,
     online: false,
     ip: "local",
     region: "",

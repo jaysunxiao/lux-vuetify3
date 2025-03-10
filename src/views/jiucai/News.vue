@@ -136,7 +136,7 @@ function newNoticeNews(news: Array<News>) {
     const levelType = levelMap[first.level].type;
     const title = _.isEmpty(first.title) ? first.content : first.title;
     newNotify(`${levelType}级情报`, title);
-    newsStore.addNewNotice(`${levelType}级情报`, title, first.ctime);
+    newsStore.addNewNotice(`${levelType}级情报`, title, first.ctime, `https://jiucai.fun/ac/${first.id}`);
     myStore.newNoticeDialog = true;
   }
 }
