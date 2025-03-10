@@ -129,10 +129,10 @@ async function requestNews() {
 
 function newNoticeNews(news: Array<News>) {
   const first = _.first(news.filter(it => it.level == 1 || it.level == 2).filter(it => newsStore.isNew(it.id)));
-  if (_.isEmpty(first)) {
+  if (!isNewNoticeEnable() || _.isEmpty(first)) {
     return;
   }
-  if (myStore.newsNotify) {
+  if (myStore.newsNotify && !mobile.value) {
     const levelType = levelMap[first.level].type;
     const title = _.isEmpty(first.title) ? first.content : first.title;
     newNotify(`${levelType}级情报`, title);
@@ -199,11 +199,12 @@ async function requestTrending() {
   xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => -it.ctime);
 }
 
+function isNewNoticeEnable() {
+  return myStore.newsNotify && !mobile.value
+}
+
 function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Concept>) {
-  if (_.isEmpty(oldConcepts)) {
-    return;
-  }
-  if (!myStore.newsNotify) {
+  if (!isNewNoticeEnable() || _.isEmpty(oldConcepts)) {
     return;
   }
 
@@ -219,10 +220,7 @@ function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Conce
 }
 
 function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>) {
-  if (_.isEmpty(oldTrending)) {
-    return;
-  }
-  if (!myStore.newsNotify) {
+  if (!isNewNoticeEnable() || _.isEmpty(oldTrending)) {
     return;
   }
 
@@ -238,10 +236,7 @@ function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Tren
 }
 
 function newNoticeTrendingWithSource(oldTrending: Array<Trending>, newTrending: Array<Trending>, source: string) {
-  if (_.isEmpty(oldTrending)) {
-    return;
-  }
-  if (!myStore.newsNotify) {
+  if (!isNewNoticeEnable() || _.isEmpty(oldTrending)) {
     return;
   }
 

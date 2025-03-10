@@ -20,7 +20,7 @@ function newNoticeClass(ctime) {
 </script>
 
 <template>
-  <v-dialog transition="dialog-top-transition" width="60vw" v-model="myStore.newNoticeDialog">
+  <v-dialog transition="dialog-top-transition" width="70vw" v-model="myStore.newNoticeDialog">
     <template v-slot:default="{ isActive }">
       <v-card prepend-icon="mdi-newspaper-variant-outline">
         <template v-slot:title>

@@ -20,7 +20,7 @@ const snackbarStore = useSnackbarStore();
 <!--  <v-btn v-else icon @click="myStore.profileDialog = true">-->
 <!--    <v-icon>mdi-account-check-outline</v-icon>-->
 <!--  </v-btn>-->
-  <v-btn icon @click="myStore.newNoticeDialog = true">
+  <v-btn v-if="!mobile" icon @click="myStore.newNoticeDialog = true">
     <v-icon>mdi-newspaper-variant-multiple</v-icon>
   </v-btn>
 </template>
