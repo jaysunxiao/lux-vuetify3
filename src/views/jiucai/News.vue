@@ -186,7 +186,7 @@ async function requestTrending() {
   const response: TrendingResponse = await asyncAsk(request)
   douyinTrendingRef.value = response.douyin;
 
-  newNoticeTrending(dfcfTrendingRef.value, response.dfcf2, "研报");
+  newNoticeTrendingWithSource(dfcfTrendingRef.value, response.dfcf2, "研报");
   dfcfTrendingRef.value = response.dfcf2;
   newNoticeTrending(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
   bloomBergTrendingRef.value = response.bloomBerg;
@@ -217,7 +217,7 @@ function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Conce
   }
 }
 
-function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>, type: string) {
+function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Trending>) {
   if (_.isEmpty(oldTrending)) {
     return;
   }
@@ -232,6 +232,25 @@ function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Tren
 
     newNotify(trending.title);
     newsStore.addNewNotice(trending.subTitle, trending.title,  trending.ctime, trending.url);
+    myStore.newNoticeDialog = true;
+  }
+}
+
+function newNoticeTrendingWithSource(oldTrending: Array<Trending>, newTrending: Array<Trending>, source: string) {
+  if (_.isEmpty(oldTrending)) {
+    return;
+  }
+  if (!myStore.newsNotify) {
+    return;
+  }
+
+  for (const trending of newTrending) {
+    if (oldTrending.findIndex(it => it.url == trending.url) >= 0) {
+      continue;
+    }
+
+    newNotify(trending.title);
+    newsStore.addNewNotice(source, trending.title + "-" + trending.subTitle,  trending.ctime, trending.url);
     myStore.newNoticeDialog = true;
   }
 }
