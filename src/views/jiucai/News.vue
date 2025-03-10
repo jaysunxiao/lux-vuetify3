@@ -188,9 +188,9 @@ async function requestTrending() {
 
   newNoticeTrendingWithSource(dfcfTrendingRef.value, response.dfcf2, "研报");
   dfcfTrendingRef.value = response.dfcf2;
-  newNoticeTrending(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
+  newNoticeTrendingWithSource(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
   bloomBergTrendingRef.value = response.bloomBerg;
-  newNoticeTrending(reutersTrendingRef.value, response.reuters, "路透社");
+  newNoticeTrendingWithSource(reutersTrendingRef.value, response.reuters, "路透社");
   reutersTrendingRef.value = response.reuters;
   newNoticeTrending(xueqiuTrendingRef.value, response.xueqiu);
   newNoticeTrending(xueqiuTrendingRef.value, response.dfcf1);
