@@ -24,7 +24,7 @@ import clipboard from "@/utils/clipboardUtils";
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {useMyStore} from "@/stores/myStore";
 import {useNewsStore, levelMap} from "@/stores/newsStore";
-import {parseTime, formatTimeAgo, getFormatMonth} from "@/utils/timeUtils";
+import {parseTime, formatTimeAgo, getFormatMonth, formatTimestampMMDDHHMM} from "@/utils/timeUtils";
 import {randomEmotion, randomQuoteWithWebSite} from "@/utils/quoteUtils";
 import Chart from 'chart.js/auto';
 import {newNotify} from "@/utils/notifyUtils";
@@ -128,14 +128,15 @@ async function requestNews() {
 }
 
 function newNoticeNews(news: Array<News>) {
-  const first = _.first(news.filter(it => it.level == "S" || it.level == "A").filter(it => newsStore.isNew(it.id)));
+  const first = _.first(news.filter(it => it.level == 1 || it.level == 2).filter(it => newsStore.isNew(it.id)));
   if (_.isEmpty(first)) {
     return;
   }
   if (myStore.newsNotify) {
+    const levelType = levelMap[first.level].type;
     const title = _.isEmpty(first.title) ? first.content : first.title;
-    newNotify(`${first.level}级情报`, title);
-    newsStore.addNewNotice(`${first.level}级情报`, title, first.ctime);
+    newNotify(`${levelType}级情报`, title);
+    newsStore.addNewNotice(`${levelType}级情报`, title, first.ctime);
     myStore.newNoticeDialog = true;
   }
 }
@@ -1096,12 +1097,12 @@ function copyNews(news: News, event: Event) {
       </v-timeline-item>
       <v-timeline-item v-for="newsEle in newsRef" fill-dot :dot-color="levelMap[newsEle.level].color" :size="levelMap[newsEle.level].size">
         <template v-slot:icon>
-          <span>{{ newsEle.level }}</span>
+          <span>{{ levelMap[newsEle.level].type }}</span>
         </template>
         <v-card max-width="1100px">
           <v-card-title class="cursor-pointer" v-tooltip:start="'复制'" v-ripple @click="copyNews(newsEle, $event)">
             <v-icon :color="levelMap[newsEle.level].color" :icon="levelMap[newsEle.level].icon"></v-icon>
-            级情报 {{ newsEle.ctime }}
+            级情报 {{ formatTimestampMMDDHHMM(newsEle.ctime) }}
             <v-icon v-if="newsStore.isNew(newsEle.id)" color="primary" icon="mdi-new-box"></v-icon>
           </v-card-title>
           <v-card-subtitle>

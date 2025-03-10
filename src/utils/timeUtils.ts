@@ -28,6 +28,41 @@ export function formatTimeAgo(timestamp) {
   }
 }
 
+// js将时间戳转为  03/10 17:06 的形式
+export function formatTimestampMMDDHHMM(timestamp) {
+  const date = new Date(timestamp); // 将时间戳转换为Date对象
+
+  // 获取月份（0-11，需要加1），并补零
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  // 获取日期，并补零
+  const day = String(date.getDate()).padStart(2, '0');
+  // 获取小时，并补零
+  const hours = String(date.getHours()).padStart(2, '0');
+  // 获取分钟，并补零
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  // 拼接成指定格式
+  return `${month}/${day} ${hours}:${minutes}`;
+}
+
+export function formatTimestampYYYYMMDDHHMM(timestamp) {
+  const date = new Date(timestamp); // 将时间戳转换为Date对象
+
+  // 获取完整的年份
+  const year = date.getFullYear();
+  // 获取月份（0-11，需要加1），并补零
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  // 获取日期，并补零
+  const day = String(date.getDate()).padStart(2, '0');
+  // 获取小时，并补零
+  const hours = String(date.getHours()).padStart(2, '0');
+  // 获取分钟，并补零
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  // 拼接成指定格式
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
 // 获取今天0点0分0秒的时间戳
 export function getTodayStartTime() {
   const date = new Date();

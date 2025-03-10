@@ -6,45 +6,48 @@ const myAvatarDefault = avatarAutoUrl(1);
 const aiAvatarDefault = avatarAutoUrl(2);
 const aiAvatar2Default = avatarAutoUrl(3);
 
-export const levelMap = {
-  "S": {
-    value: 1,
-    icon: "mdi-alpha-s-circle-outline",
-    color: "error",
-    size: "x-large"
-  },
-  "A": {
-    value: 2,
-    icon: "mdi-alpha-a-circle-outline",
-    color: "warning",
-    size: "large"
-  },
-  "B": {
-    value: 3,
-    icon: "mdi-alpha-b-circle-outline",
-    color: "success",
-    size: "default"
-  },
-  "C": {
-    value: 4,
-    icon: "mdi-alpha-c-circle-outline",
-    color: "info",
-    size: "small"
-  },
-  "D": {
-    value: 5,
-    icon: "mdi-alpha-d-circle-outline",
-    color: "blue-grey",
-    size: "x-small"
-  },
-};
+class NewNotice {
+  source: string;
+  title: string;
+  url: string;
+  ctime: number;
+
+  constructor(source: string, title: string, url: string, ctime: number) {
+    this.source = source;
+    this.title = title;
+    this.url = url;
+    this.ctime = ctime;
+  }
+}
+
+class NewsLevel {
+  value: number;
+  type: string;
+  icon: string;
+  color: string;
+  size: string;
+
+  constructor(value: number, type: string, icon: string, color: string, size: string) {
+    this.value = value;
+    this.type = type;
+    this.icon = icon;
+    this.color = color;
+    this.size = size;
+  }
+}
+
+export const levelMap = new Map<number, NewsLevel>();
+levelMap[1] = new NewsLevel(1, "S", "mdi-alpha-s-circle-outline", "error", "x-large");
+levelMap[2] = new NewsLevel(2, "A", "mdi-alpha-a-circle-outline", "warning", "large");
+levelMap[3] = new NewsLevel(3, "B", "mdi-alpha-b-circle-outline", "success", "default");
+levelMap[4] = new NewsLevel(4, "C", "mdi-alpha-c-circle-outline", "info", "small");
+levelMap[5] = new NewsLevel(5, "D", "mdi-alpha-d-circle-outline", "blue-grey", "x-small");
 
 export function avatarAutoUrl(id: number): string {
   const avatarId = id % 800 + 1;
   const avatar = import.meta.env.VITE_BASE_HTTP_URL + "/ab/" + avatarId + ".jpg";
   return avatar;
 }
-
 
 export const useNewsStore = defineStore("newsStore", {
   state: () => ({
@@ -53,7 +56,7 @@ export const useNewsStore = defineStore("newsStore", {
     newsLevelFilterValue: 5,
     chatMessageId: 0,
 
-    newNotices: [],
+    newNotices: Array<NewNotice>,
     online: false,
     ip: "local",
     region: "",
@@ -117,15 +120,15 @@ export const useNewsStore = defineStore("newsStore", {
     },
 
     addNewNotice(source: string, title: string, ctime: number, url: string) {
+      // 主要是过滤研报，研报的排名会经常的变动
+      if (new Date().getTime() - ctime >  1 * 24 * 60 * 60 * 1000) {
+        return;
+      }
       if (this.newNotices.findIndex(it => it.url == url) >= 0) {
         return;
       }
-      const array = [{
-        source: source,
-        title: title,
-        ctime: ctime,
-        url: url
-      }];
+      const newNotice = new NewNotice(source, title, url, ctime);
+      const array = [newNotice];
       this.newNotices = _.sortBy(_.concat(array, this.newNotices), it => -it.ctime);
       if (this.newNotices.length > 300) {
         this.newNotices = _.drop(this.newNotices, 100);

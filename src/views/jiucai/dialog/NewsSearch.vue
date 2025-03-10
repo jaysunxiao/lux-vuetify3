@@ -4,6 +4,7 @@ import {useNewsStore, levelMap} from "@/stores/newsStore";
 import {useDisplay} from "vuetify";
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {registerPacketReceiver} from "@/utils/websocket";
+import {formatTimestampYYYYMMDDHHMM} from "@/utils/timeUtils";
 import NewsSearchResponse from "@/protocol/news/NewsSearchResponse";
 import News from "@/protocol/news/News";
 
@@ -34,7 +35,7 @@ function atNewsSearchResponse(packet: NewsSearchResponse) {
         <template v-for="newsEle in newsRef">
           <v-card-title>
             <v-icon :color="levelMap[newsEle.level].color" :icon="levelMap[newsEle.level].icon" size="x-small"></v-icon>
-            {{ newsEle.title }} {{ newsEle.ctime }}
+            {{ newsEle.title }} {{ formatTimestampYYYYMMDDHHMM(newsEle.ctime) }}
           </v-card-title>
           <v-card-subtitle class="text-pre-wrap">
             {{ newsEle.content }}
