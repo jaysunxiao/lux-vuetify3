@@ -45,10 +45,10 @@ function newNoticeClass(ctime) {
                 {{ formatTimeAgo(newNotice.ctime) }}
               </td>
               <td>
-                {{ _.truncate(newNotice.source) }}
+                {{ _.truncate(newNotice.source, { length: 8 }) }}
               </td>
               <td :class="newNoticeClass(newNotice.ctime)">
-                <a :href="newNotice.url" referrerPolicy="no-referrer" target="_blank">{{ newNotice.title }}</a>
+                <a :href="newNotice.url" referrerPolicy="no-referrer" target="_blank">{{ _.truncate(newNotice.title, { length: 88 }) }}</a>
               </td>
             </tr>
             </tbody>
