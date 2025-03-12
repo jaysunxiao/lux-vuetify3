@@ -537,7 +537,7 @@ function copyConcept(concept: Concept, event: Event) {
 
 function copyNews(news: News, event: Event) {
   let str = "";
-  str = str + news.level + "级情报 " + news.ctime + "\n";
+  str = str + levelMap[news.level].type + "级情报 " + news.ctime + "\n";
   if (!_.isEmpty(news.title)) {
     str = str + "⚡️" + news.title + "\n\n"
   } else {
