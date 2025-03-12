@@ -27,7 +27,6 @@ import {useNewsStore, levelMap} from "@/stores/newsStore";
 import {parseTime, formatTimeAgo, getFormatMonth, formatTimestampMMDDHHMM} from "@/utils/timeUtils";
 import {randomEmotion, randomQuoteWithWebSite} from "@/utils/quoteUtils";
 import Chart from 'chart.js/auto';
-import {newNotify} from "@/utils/notifyUtils";
 
 const snackbarStore = useSnackbarStore();
 const newsStore = useNewsStore();
@@ -135,9 +134,7 @@ function newNoticeNews(news: Array<News>) {
   if (myStore.newsNotify && !mobile.value) {
     const levelType = levelMap[first.level].type;
     const title = _.isEmpty(first.title) ? first.content : first.title;
-    newNotify(`${levelType}级情报`, title);
     newsStore.addNewNotice(`${levelType}级情报`, title, `https://jiucai.fun/ac/${first.id}`, first.ctime);
-    myStore.newNoticeDialog = true;
   }
 }
 
@@ -213,9 +210,7 @@ function newNoticeConcepts(oldConcepts: Array<Concept>, newConcepts: Array<Conce
       continue;
     }
 
-    newNotify(concept.title);
     newsStore.addNewNotice(concept.title, concept.content, concept.url, concept.ctime);
-    myStore.newNoticeDialog = true;
   }
 }
 
@@ -229,9 +224,7 @@ function newNoticeTrending(oldTrending: Array<Trending>, newTrending: Array<Tren
       continue;
     }
 
-    newNotify(trending.title);
     newsStore.addNewNotice(trending.subTitle, trending.title,  trending.url, trending.ctime);
-    myStore.newNoticeDialog = true;
   }
 }
 
@@ -245,9 +238,7 @@ function newNoticeTrendingWithSource(oldTrending: Array<Trending>, newTrending: 
       continue;
     }
 
-    newNotify(trending.title);
     newsStore.addNewNotice(source, trending.title + "-" + trending.subTitle,  trending.url, trending.ctime);
-    myStore.newNoticeDialog = true;
   }
 }
 

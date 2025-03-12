@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import _ from "lodash";
+import {newNotify} from "@/utils/notifyUtils";
 
 const newNewsTimeout = 3 * 60 * 1000;
 const myAvatarDefault = avatarAutoUrl(1);
@@ -65,6 +66,7 @@ export const useNewsStore = defineStore("newsStore", {
     activeUid: 0,
     chatMessageIdDiff: 0,
     newsSearchDialog: false,
+    newNoticeDialog: false,
   }),
 
   persist: {
@@ -130,9 +132,11 @@ export const useNewsStore = defineStore("newsStore", {
       const newNotice = new NewNotice(source, title, url, ctime);
       const array = [newNotice];
       this.newNotices = _.sortBy(_.concat(array, this.newNotices), it => -it.ctime);
-      if (this.newNotices.length > 300) {
-        this.newNotices = _.drop(this.newNotices, 100);
+      if (this.newNotices.length > 512) {
+        this.newNotices = _.drop(this.newNotices, 128);
       }
+      newNotify(source, title);
+      this.newNoticeDialog = true;
     }
   }
 });

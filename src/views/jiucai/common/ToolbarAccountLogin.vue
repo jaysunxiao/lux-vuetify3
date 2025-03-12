@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import {useMyStore} from "@/stores/myStore";
+import {useNewsStore} from "@/stores/newsStore";
 import {useDisplay} from "vuetify";
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {useCustomizeThemeStore} from "@/stores/customizeTheme";
 
 const {mobile, width, height} = useDisplay();
 const myStore = useMyStore();
+const newsStore = useNewsStore();
 const customizeTheme = useCustomizeThemeStore();
 const snackbarStore = useSnackbarStore();
 
@@ -20,7 +22,7 @@ const snackbarStore = useSnackbarStore();
 <!--  <v-btn v-else icon @click="myStore.profileDialog = true">-->
 <!--    <v-icon>mdi-account-check-outline</v-icon>-->
 <!--  </v-btn>-->
-  <v-btn v-if="!mobile" icon @click="myStore.newNoticeDialog = true">
+  <v-btn v-if="!mobile" icon @click="newsStore.newNoticeDialog = true">
     <v-icon>mdi-newspaper-variant-multiple</v-icon>
   </v-btn>
 </template>

@@ -105,7 +105,7 @@ document.addEventListener('visibilitychange', function() {
 
 
 let notifyTime = new Date().getTime();
-export async function newNotify(desktopTitle: string, desktopBody: string) {
+export function newNotify(desktopTitle: string, desktopBody: string) {
   const currentTime = new Date().getTime();
   // 1分钟只通知一次
   if (currentTime - notifyTime < 60 * 1000) {
