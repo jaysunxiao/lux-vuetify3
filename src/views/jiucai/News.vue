@@ -186,9 +186,9 @@ async function requestTrending() {
 
   newNoticeTrendingWithSource(dfcfTrendingRef.value, response.dfcf2, "研报");
   dfcfTrendingRef.value = response.dfcf2;
-  newNoticeTrendingWithSource(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
+  newNoticeTrendingWithSourceAndSubTitle(bloomBergTrendingRef.value, response.bloomBerg, "彭博社");
   bloomBergTrendingRef.value = response.bloomBerg;
-  newNoticeTrendingWithSource(reutersTrendingRef.value, response.reuters, "路透社");
+  newNoticeTrendingWithSourceAndSubTitle(reutersTrendingRef.value, response.reuters, "路透社");
   reutersTrendingRef.value = response.reuters;
   newNoticeTrending(xueqiuTrendingRef.value, response.xueqiu);
   newNoticeTrending(xueqiuTrendingRef.value, response.dfcf1);
@@ -238,7 +238,22 @@ function newNoticeTrendingWithSource(oldTrending: Array<Trending>, newTrending: 
       continue;
     }
 
-    newsStore.addNewNotice(source, trending.title + "-" + trending.subTitle,  trending.url, trending.ctime);
+    const title = _.isEmpty(trending.subTitle) ? trending.title : (trending.title + "-" + trending.subTitle);
+    newsStore.addNewNotice(source, title,  trending.url, trending.ctime);
+  }
+}
+
+function newNoticeTrendingWithSourceAndSubTitle(oldTrending: Array<Trending>, newTrending: Array<Trending>, source: string) {
+  if (!isNewNoticeEnable() || _.isEmpty(oldTrending)) {
+    return;
+  }
+
+  for (const trending of newTrending) {
+    if (oldTrending.findIndex(it => it.url == trending.url) >= 0) {
+      continue;
+    }
+
+    newsStore.addNewNotice(source, trending.subTitle,  trending.url, trending.ctime);
   }
 }
 
