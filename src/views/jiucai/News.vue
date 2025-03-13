@@ -190,9 +190,9 @@ async function requestTrending() {
   bloomBergTrendingRef.value = response.bloomBerg;
   newNoticeTrendingWithSourceAndSubTitle(reutersTrendingRef.value, response.reuters, "路透社");
   reutersTrendingRef.value = response.reuters;
+  response.xueqiu.forEach(it => it.subTitle = "雪球");
   newNoticeTrending(xueqiuTrendingRef.value, response.xueqiu);
   newNoticeTrending(xueqiuTrendingRef.value, response.dfcf1);
-  response.xueqiu.forEach(it => it.subTitle = "雪球");
   xueqiuTrendingRef.value = _.sortBy(_.concat(response.xueqiu, response.dfcf1), it => -it.ctime);
 }
 
