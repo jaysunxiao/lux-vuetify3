@@ -24,7 +24,7 @@ import clipboard from "@/utils/clipboardUtils";
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {useMyStore} from "@/stores/myStore";
 import {useNewsStore, levelMap} from "@/stores/newsStore";
-import {parseTime, formatTimeAgo, getFormatMonth, formatTimestampMMDDHHMM} from "@/utils/timeUtils";
+import {parseTime, formatTimeAgo, getFormatMonth, formatTimestampMMDDHHMM, formatTimestampYYYYMMDDHHMM} from "@/utils/timeUtils";
 import {randomEmotion, randomQuoteWithWebSite} from "@/utils/quoteUtils";
 import Chart from 'chart.js/auto';
 
@@ -552,7 +552,7 @@ function copyConcept(concept: Concept, event: Event) {
 
 function copyNews(news: News, event: Event) {
   let str = "";
-  str = str + levelMap[news.level].type + "级情报 " + news.ctime + "\n";
+  str = str + levelMap[news.level].type + "级情报 " + formatTimestampYYYYMMDDHHMM(news.ctime) + "\n";
   if (!_.isEmpty(news.title)) {
     str = str + "⚡️" + news.title + "\n\n"
   } else {
@@ -566,7 +566,6 @@ function copyNews(news: News, event: Event) {
       str = str + " " + stock.name + "#" + stock.price + "(" + stock.rise + ")";
     }
   }
-  // 🐳
   if (!_.isEmpty(news.concepts)) {
     str = str + "\n" + randomEmotion() + "概念:";
     for (const concept of news.concepts) {
@@ -791,7 +790,7 @@ function copyNews(news: News, event: Event) {
         <v-card class="mt-3">
           <v-card-title v-ripple @click="copyNews(newsEle, $event)">
             <v-icon :color="levelMap[newsEle.level].color" :icon="levelMap[newsEle.level].icon"></v-icon>
-            级情报 {{ newsEle.ctime }}
+            级情报 {{ formatTimestampMMDDHHMM(newsEle.ctime) }}
             <v-icon v-if="newsStore.isNew(newsEle.id)" color="primary" icon="mdi-new-box"></v-icon>
           </v-card-title>
           <v-card-subtitle>
