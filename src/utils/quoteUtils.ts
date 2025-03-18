@@ -137,5 +137,5 @@ export function randomQuoteWithWebSite() {
   const emojiBefore = emoji.random().emoji;
   const emojiAfter = emoji.random().emoji;
   const myJoke = jokes[_.random(0, jokes.length - 1)];
-  return emojiBefore + myJoke + emojiAfter + "，https://jiucai.fun";
+  return emojiBefore + myJoke + emojiAfter + " https://jiucai.fun";
 }

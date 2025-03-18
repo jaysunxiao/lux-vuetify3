@@ -518,6 +518,17 @@ async function goToUrl(trending: Trending, event: Event, go: boolean = true) {
   }
 }
 
+async function goToUrlRouters(title: string, trending: Trending, event: Event) {
+  let str = `${title} - ${trending.title} - ${trending.subTitle} - ${parseTime(trending.ctime)}\n\n`;
+  str = str + trending.url + "\n\n";
+  str = str + randomQuoteWithWebSite();
+  clipboard(str, event);
+  snackbarStore.showSuccessMessage("复制成功");
+  setTimeout(() => {
+    window.open(trending.url, '_blank');
+  }, 300);
+}
+
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -669,7 +680,7 @@ function copyNews(news: News, event: Event) {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+            <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('彭博社', trending, $event)">
               <td :class="trendingClass(trending)">
                 {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }}
               </td>
@@ -695,7 +706,7 @@ function copyNews(news: News, event: Event) {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+            <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('路透社', trending, $event)">
               <td :class="trendingClass(trending)">
                 {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
               </td>
@@ -960,7 +971,7 @@ function copyNews(news: News, event: Event) {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+                    <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('彭博社', trending, $event)">
                       <td :class="trendingClass(trending)">
                         {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
                       </td>
@@ -988,7 +999,7 @@ function copyNews(news: News, event: Event) {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+                    <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('路透社', trending, $event)">
                       <td :class="trendingClass(trending)">
                         {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
                       </td>
