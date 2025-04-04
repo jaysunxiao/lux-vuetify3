@@ -682,7 +682,7 @@ function copyNews(news: News, event: Event) {
             <tbody>
             <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('彭博社', trending, $event)">
               <td :class="trendingClass(trending)">
-                {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }}
+                {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
               </td>
             </tr>
             </tbody>
