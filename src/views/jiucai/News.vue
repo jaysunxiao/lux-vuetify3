@@ -264,7 +264,7 @@ async function requestMarkets() {
     return;
   }
   const request = new MarketRequest();
-  request.num = 90;
+  request.num = 360;
   const response: MarketResponse = await asyncAsk(request);
   initMarketFlag = true;
 
