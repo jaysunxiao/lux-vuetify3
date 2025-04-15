@@ -56,6 +56,7 @@ export const useNewsStore = defineStore("newsStore", {
     newsLevelFilter: "D",
     newsLevelFilterValue: 5,
     chatMessageId: 0,
+    marketIndex: 512,
 
     newNotices: new Array<NewNotice>,
     online: false,
@@ -71,7 +72,7 @@ export const useNewsStore = defineStore("newsStore", {
 
   persist: {
     enabled: true,
-    strategies: [{storage: localStorage, paths: ["newsInfos", "newsLevelFilter", "newsLevelFilterValue", "chatMessageId"]}],
+    strategies: [{storage: localStorage, paths: ["newsInfos", "newsLevelFilter", "newsLevelFilterValue", "chatMessageId", "marketIndex"]}],
   },
 
   getters: {},

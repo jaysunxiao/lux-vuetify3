@@ -73,6 +73,13 @@ watch(
   }
 );
 
+watch(
+  () => newsStore.marketIndex,
+  async (val) => {
+    setTimeout(() => requestMarkets(), 300);
+  }
+);
+
 document.addEventListener("visibilitychange", function () {
   if (document.visibilityState === "visible") {
     requestNews();
@@ -258,16 +265,15 @@ function newNoticeTrendingWithSourceAndSubTitle(oldTrending: Array<Trending>, ne
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-let initMarketFlag = false;
+var lastRequestMarketNum = 0;
 async function requestMarkets() {
-  if (initMarketFlag) {
+  if (lastRequestMarketNum == newsStore.marketIndex) {
     return;
   }
+  lastRequestMarketNum = newsStore.marketIndex;
   const request = new MarketRequest();
-  request.num = 360;
+  request.num = newsStore.marketIndex;
   const response: MarketResponse = await asyncAsk(request);
-  initMarketFlag = true;
-
   const firstMarket = _.first(response.markets);
   const shMarketIndex = firstMarket?.shMarketIndex / 100;
   const marketIndexRatio = firstMarket?.marketIndex / shMarketIndex;
@@ -276,6 +282,9 @@ async function requestMarkets() {
   const cyMarketIndexRatio = firstMarket?.cyMarketIndex / shMarketIndex;
   const bjMarketIndexRatio = firstMarket?.bjMarketIndex / shMarketIndex;
   const exchangeIndexRatio = firstMarket?.exchange / shMarketIndex;
+  Chart.getChart("indexChart")?.destroy()
+  Chart.getChart("exchangeChart")?.destroy()
+
   new Chart(document.getElementById('indexChart'), {
     options: {
       animations: {
@@ -934,6 +943,7 @@ function copyNews(news: News, event: Event) {
           </v-card-text>
           <v-card-subtitle>
             上海主板的核心参照物是累加了上海主板所有股票的流通市值（去除了银行）
+            <v-slider v-model="newsStore.marketIndex" prepend-icon="mdi-swap-horizontal" min="1" max="512" step="1"></v-slider>
           </v-card-subtitle>
         </v-card>
       </v-timeline-item>
