@@ -552,7 +552,14 @@ function scrollToBottom() {
 }
 
 function trendingClass(trending: Trending) {
-  return new Date().getTime() - trending.ctime < NEW_TRENDING_TIME ? 'font-weight-black' : '';
+  let classStr = "";
+  if (new Date().getTime() - trending.ctime < NEW_TRENDING_TIME) {
+    classStr = 'font-weight-black';
+  }
+  if (trending.level == 1) {
+    classStr = ' text-red';
+  }
+  return classStr;
 }
 
 function hotRankChange(rankChange: number) {
