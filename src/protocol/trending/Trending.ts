@@ -7,6 +7,7 @@ class Trending {
     title: string = '';
     subTitle: string = '';
     ctime: number = 0;
+    level: number = 0;
 }
 
 export class TrendingRegistration implements IProtocolRegistration<Trending> {
@@ -19,11 +20,14 @@ export class TrendingRegistration implements IProtocolRegistration<Trending> {
             buffer.writeInt(0);
             return;
         }
-        buffer.writeInt(-1);
+        const beforeWriteIndex = buffer.getWriteOffset();
+        buffer.writeInt(77);
         buffer.writeLong(packet.ctime);
         buffer.writeString(packet.subTitle);
         buffer.writeString(packet.title);
         buffer.writeString(packet.url);
+        buffer.writeInt(packet.level);
+        buffer.adjustPadding(77, beforeWriteIndex);
     }
 
     read(buffer: IByteBuffer): Trending | null {
@@ -41,6 +45,10 @@ export class TrendingRegistration implements IProtocolRegistration<Trending> {
         packet.title = result2;
         const result3 = buffer.readString();
         packet.url = result3;
+        if (buffer.compatibleRead(beforeReadIndex, length)) {
+            const result4 = buffer.readInt();
+            packet.level = result4;
+        }
         if (length > 0) {
             buffer.setReadOffset(beforeReadIndex + length);
         }

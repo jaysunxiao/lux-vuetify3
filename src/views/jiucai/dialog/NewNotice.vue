@@ -35,7 +35,7 @@ function newNoticeClass(ctime) {
                 信源
               </th>
               <th>
-                内容
+                内容（点击跳转链接）
               </th>
             </tr>
             </thead>
