@@ -50,5 +50,8 @@ export const useCustomizeThemeStore = defineStore({
     setLocalCode(localCode: string) {
       this.localCode = localCode;
     },
+    markdownTheme() {
+      return this.darkTheme ? 'dark' : 'light';
+    }
   },
 });

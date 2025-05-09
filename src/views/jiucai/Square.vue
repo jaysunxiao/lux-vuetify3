@@ -2,6 +2,7 @@
 import {useSnackbarStore} from "@/stores/snackbarStore";
 import {useChatStore} from "@/views/app/chat/chatStore";
 import {useMyStore} from "@/stores/myStore";
+import { useCustomizeThemeStore } from "@/stores/customizeTheme";
 import {Icon} from "@iconify/vue";
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/preview.css';
@@ -25,6 +26,7 @@ const snackbarStore = useSnackbarStore();
 const chatStore = useChatStore();
 const myStore = useMyStore();
 const route = useRoute();
+const customizeTheme = useCustomizeThemeStore();
 
 const {mobile, height, width} = useDisplay();
 const newsStore = useNewsStore();
@@ -249,7 +251,7 @@ const goTo = (url: string) => {
           <img :src="message.avatar" alt="alt"/>
         </v-avatar>
         <v-card class="mx-3">
-          <md-preview v-model="message.content" editor-id="preview-only"/>
+          <md-preview v-model="message.content" :theme="customizeTheme.markdownTheme()" editor-id="preview-only"/>
         </v-card>
       </v-row>
       <v-row justify="center">

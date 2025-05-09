@@ -23,8 +23,11 @@ import _ from "lodash";
 import SdImage from "@/protocol/sdiffusion/SdImage";
 import {isBlank} from "@/utils/stringUtils";
 import {useMyStore} from "@/stores/myStore";
+import { useCustomizeThemeStore } from "@/stores/customizeTheme";
 
 
+
+const customizeTheme = useCustomizeThemeStore();
 const myStore = useMyStore();
 const snackbarStore = useSnackbarStore();
 const route = useRoute();
@@ -280,7 +283,7 @@ const handleKeydown = (e) => {
           <img :src="newsStore.myAvatar()" alt="alt"/>
         </v-avatar>
         <v-card class="mt-3 mx-3">
-          <md-preview v-model="message.content" editor-id="preview-only"/>
+          <md-preview v-model="message.content" :theme="customizeTheme.markdownTheme()" editor-id="preview-only"/>
         </v-card>
       </v-row>
       <v-row v-if="!_.isEmpty(message.sdImages)">

@@ -51,7 +51,7 @@ onMounted(async () => {
           {{ myStore.announce.name }}
         </template>
         <v-card-text>
-          <md-preview v-model="boardRef" editor-id="preview-only"/>
+          <md-preview v-model="boardRef" :theme="customizeTheme.markdownTheme()" editor-id="preview-only"/>
         </v-card-text>
       </v-card>
     </template>

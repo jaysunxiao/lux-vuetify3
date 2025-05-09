@@ -2,6 +2,9 @@
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/preview.css';
 import axios from "axios";
+import { useCustomizeThemeStore } from "@/stores/customizeTheme";
+
+const customizeTheme = useCustomizeThemeStore();
 
 const tutorialUrl = import.meta.env.VITE_BASE_HTTP_URL + "/config/tutorial.md";
 
@@ -20,7 +23,7 @@ const tutorialRef = ref("");
 
 <template>
   <v-container >
-    <md-preview v-model="tutorialRef" editor-id="preview-only"/>
+    <md-preview v-model="tutorialRef" :theme="customizeTheme.markdownTheme()" editor-id="preview-only"/>
   </v-container>
 
 </template>
