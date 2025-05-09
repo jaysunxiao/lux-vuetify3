@@ -267,6 +267,7 @@ function newNoticeTrendingWithSourceAndSubTitle(oldTrending: Array<Trending>, ne
 // ---------------------------------------------------------------------------------------------------------------------
 var lastRequestMarketNum = 0;
 async function requestMarkets() {
+  console.log(`request markets ${lastRequestMarketNum} -> ${newsStore.marketIndex}`);
   if (lastRequestMarketNum == newsStore.marketIndex) {
     return;
   }
@@ -459,6 +460,8 @@ async function requestMarkets() {
       ],
     },
   });
+
+  console.log(`result markets ${lastRequestMarketNum} -> ${newsStore.marketIndex} -> ${response.markets.length}`);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
