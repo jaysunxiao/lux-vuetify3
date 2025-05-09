@@ -38,7 +38,7 @@ function openNavigation(href: string) {
         <v-card-subtitle v-if="nav.content.startsWith('-')">{{ nav.content }}</v-card-subtitle>
         <v-card-title v-else>{{ nav.content }}</v-card-title>
         <v-card-text>
-          <v-chip v-for="n in nav.children" label color="primary" class="ma-1" @click="openNavigation(n.href)">
+          <v-chip v-for="n in nav.children" label class="ma-1" @click="openNavigation(n.href)">
             {{ n.content }}
           </v-chip>
         </v-card-text>
