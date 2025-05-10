@@ -971,7 +971,7 @@ function copyNews(news: News, event: Event) {
         <template v-slot:icon>
           <span>Hot</span>
         </template>
-        <v-container>
+        <v-container class="pa-0">
           <v-row>
             <v-col cols="6">
               <v-card v-tooltip:start="'黑色粗体为一天内的资讯'">
