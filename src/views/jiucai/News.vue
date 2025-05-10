@@ -559,7 +559,7 @@ function trendingClass(trending: Trending) {
   if (trending.level == 1) {
     classStr = ' text-red';
   }
-  return classStr;
+  return classStr.trim();
 }
 
 function hotRankChange(rankChange: number) {
