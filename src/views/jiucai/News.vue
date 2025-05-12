@@ -91,6 +91,7 @@ function init() {
     setTimeout(() => {
       init();
     }, 100);
+    return;
   }
 
   doInitNews();
@@ -271,10 +272,10 @@ async function requestMarkets() {
   if (lastRequestMarketNum == newsStore.marketIndex) {
     return;
   }
-  lastRequestMarketNum = newsStore.marketIndex;
   const request = new MarketRequest();
   request.num = newsStore.marketIndex;
   const response: MarketResponse = await asyncAsk(request);
+  lastRequestMarketNum = newsStore.marketIndex;
   const firstMarket = _.first(response.markets);
   const shMarketIndex = firstMarket?.shMarketIndex / 100;
   const marketIndexRatio = firstMarket?.marketIndex / shMarketIndex;
