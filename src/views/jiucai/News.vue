@@ -288,6 +288,7 @@ async function requestMarkets() {
 
   new Chart(document.getElementById('indexChart'), {
     options: {
+      responsive: true,
       animations: {
         tension: {
           duration: 1000,
@@ -387,6 +388,7 @@ async function requestMarkets() {
 
   new Chart(document.getElementById('exchangeChart'), {
     options: {
+      responsive: true,
       animations: {
         tension: {
           duration: 1000,
@@ -613,6 +615,15 @@ function copyNews(news: News, event: Event) {
   snackbarStore.showSuccessMessage("复制成功");
 }
 
+function isGoogleChrome() {
+  const userAgent = navigator.userAgent;
+  const isChromium = window.chrome !== undefined;
+  const isChrome = /Chrome/.test(userAgent) && /Google Inc/.test(navigator.vendor);
+  const isEdge = /Edg/.test(userAgent); // 排除 Microsoft Edge
+  const isOpera = /OPR/.test(userAgent); // 排除 Opera
+
+  return isChromium && isChrome && !isEdge && !isOpera;
+}
 
 </script>
 
@@ -947,7 +958,7 @@ function copyNews(news: News, event: Event) {
         <template v-slot:icon>
           <span>韭指</span>
         </template>
-        <v-card min-width="75vw">
+        <v-card :min-width="isGoogleChrome() ? '80vw' : '60vw'">
           <v-card-text>
             <canvas id="indexChart"></canvas>
           </v-card-text>
@@ -961,7 +972,7 @@ function copyNews(news: News, event: Event) {
         <template v-slot:icon>
           <span>量能</span>
         </template>
-        <v-card min-width="75vw">
+        <v-card :min-width="isGoogleChrome() ? '80vw' : '60vw'">
           <v-card-text>
             <canvas id="exchangeChart"></canvas>
           </v-card-text>
