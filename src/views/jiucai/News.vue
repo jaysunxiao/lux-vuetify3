@@ -557,10 +557,10 @@ function scrollToBottom() {
 function trendingClass(trending: Trending) {
   let classStr = "";
   if (new Date().getTime() - trending.ctime < NEW_TRENDING_TIME) {
-    classStr = 'font-weight-black';
+    classStr = classStr + 'font-weight-black';
   }
   if (trending.level == 1) {
-    classStr = ' text-red';
+    classStr = classStr + ' text-red';
   }
   return classStr.trim();
 }
