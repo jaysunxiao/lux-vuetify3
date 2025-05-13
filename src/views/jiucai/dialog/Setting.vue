@@ -38,6 +38,12 @@ const snackbarStore = useSnackbarStore();
               <v-switch v-model="myStore.squareNotify" :label="myStore.squareNotify ? '聊天通知（许要打开浏览器通知）' : '聊天通知（标题闪烁，桌面弹窗）'" hide-details color="teal" inset></v-switch>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col>
+              按照下图的方式打开浏览器通知权限
+              <v-img src="aa/image/browser-notify.png"/>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card-text>
     </v-card>
