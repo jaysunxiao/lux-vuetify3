@@ -74,7 +74,8 @@ function search() {
           density="compact"
           append-inner-icon="mdi-magnify"
           hide-details
-          placeholder="Search"
+          placeholder="聚合搜索，如果有多个关键字请用空格逗号隔开"
+          label="Search"
           @click:append-inner="search()"
           @keyup.enter="search()"
         ></v-text-field>
