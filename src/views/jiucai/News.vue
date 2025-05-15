@@ -35,6 +35,7 @@ const {mobile, width, height} = useDisplay();
 
 const NEW_CONCEPT_TIME = 33 * 24 * 60 * 60 * 1000;
 const NEW_TRENDING_TIME = 1 * 24 * 60 * 60 * 1000;
+const NEW_TRENDING_TIME_RED = 3 * 24 * 60 * 60 * 1000;
 
 
 const newsRef = ref<News[]>([]);
@@ -555,12 +556,17 @@ function scrollToBottom() {
 }
 
 function trendingClass(trending: Trending) {
+  const now = new Date().getTime();
   let classStr = "";
-  if (new Date().getTime() - trending.ctime < NEW_TRENDING_TIME) {
-    classStr = classStr + 'font-weight-black';
-  }
   if (trending.level == 1) {
+    if (now - trending.ctime < NEW_TRENDING_TIME_RED) {
+      classStr = classStr + 'font-weight-black';
+    }
     classStr = classStr + ' text-red';
+  } else {
+    if (now - trending.ctime < NEW_TRENDING_TIME) {
+      classStr = classStr + 'font-weight-black';
+    }
   }
   return classStr.trim();
 }
