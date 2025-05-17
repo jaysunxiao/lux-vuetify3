@@ -126,18 +126,6 @@ export default {
           link: "/midjourney",
           icon: "mdi-draw",
         },
-        {
-          key: "jiucai.diffusion",
-          text: "Diffusion",
-          link: "/diffusion",
-          icon: "mdi-face-mask",
-        },
-        {
-          key: "jiucai.realistic",
-          text: "Realistic",
-          link: "/realistic",
-          icon: "mdi-head-heart-outline",
-        },
         // {
         //   key: "jiucai.animation",
         //   text: "Animation",
