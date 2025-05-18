@@ -27,6 +27,7 @@ import {useNewsStore, levelMap} from "@/stores/newsStore";
 import {parseTime, formatTimeAgo, getFormatMonth, formatTimestampMMDDHHMM, formatTimestampYYYYMMDDHHMM} from "@/utils/timeUtils";
 import {randomEmotion, randomQuoteWithWebSite} from "@/utils/quoteUtils";
 import Chart from 'chart.js/auto';
+import mediaDouyin from "./common/media-douyin.json";
 
 const snackbarStore = useSnackbarStore();
 const newsStore = useNewsStore();
@@ -498,7 +499,11 @@ function formatCode(code: number) {
   return stockCode;
 }
 
-async function goToEastMoney(code: number) {
+async function goToUrl(url: string) {
+  window.open(url, '_blank');
+}
+
+async function goToUrlEsCode(code: number) {
   const stockCode = formatCode(code);
   if (stockCode.startsWith("8")) {
     window.open(`https://quote.eastmoney.com/bj/${stockCode}.html`, '_blank');
@@ -513,7 +518,7 @@ async function goToEastMoney(code: number) {
   }
 }
 
-async function goToUS(usRank: EastMoneyUSRank) {
+async function goToUrlEastMoney(usRank: EastMoneyUSRank) {
   window.open(`https://quote.eastmoney.com/us/${usRank.code}.html`, '_blank');
 }
 
@@ -521,7 +526,7 @@ async function goToRank() {
   window.open("https://guba.eastmoney.com/rank/", '_blank');
 }
 
-async function goToUrl(trending: Trending, event: Event, go: boolean = true) {
+async function goToUrlTrending(trending: Trending, event: Event, go: boolean = true) {
   let str = trending.title + " - " + trending.subTitle + " - " + parseTime(trending.ctime) + "\n\n";
   str = str + trending.url + "\n\n";
   str = str + randomQuoteWithWebSite();
@@ -689,10 +694,10 @@ function isGoogleChrome() {
             <tbody>
             <tr v-for="(rank, i) in eastMoneyRanksRef" :key="i">
               <td>{{ i + 1 }}</td>
-              <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUS(eastMoneyUSRanksRef[i])">
+              <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEastMoney(eastMoneyUSRanksRef[i])">
                 {{ eastMoneyUSRanksRef[i].code }} | {{ eastMoneyUSRanksRef[i].chineseName }}
               </td>
-              <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToEastMoney(rank.code)">
+              <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEsCode(rank.code)">
                 {{ rank.name }}
               </td>
             </tr>
@@ -769,7 +774,7 @@ function isGoogleChrome() {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+            <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
               <td :class="trendingClass(trending)">
                 {{ i + 1 }}.{{ trending.title }}
               </td>
@@ -795,7 +800,7 @@ function isGoogleChrome() {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
+            <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event, false)">
               <td :class="trendingClass(trending)">
                 <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
               </td>
@@ -824,7 +829,7 @@ function isGoogleChrome() {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(trending, i) in douyinTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+            <tr v-for="(trending, i) in douyinTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
               <td :class="trendingClass(trending)">
                 {{ i + 1 }}.{{ trending.title }}
               </td>
@@ -873,39 +878,79 @@ function isGoogleChrome() {
         </v-card>
       </template>
     </template>
+
+
+
+
+
+
+
+
+
+
+
+
+
     <v-timeline v-else density="compact" side="end">
       <v-timeline-item v-if="!_.isEmpty(conceptsRef)" fill-dot dot-color="grey" size="x-large">
         <template v-slot:icon>
           <span>SSR</span>
         </template>
-        <v-card min-width="580px">
-          <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple
-                        @click="requestConcepts(108, true)">
-            <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
-            &nbsp;
-            新概念
-            &nbsp;
-            <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
-          </v-card-title>
-          <v-card-subtitle class="text-wrap">
-            {{ conceptCoreRef }}
-          </v-card-subtitle>
-          <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
-                       @click="copyConcept(concept, $event)">
-            <v-row>
-              <v-col class="font-weight-bold" cols="3">
-                {{ concept.ctime }}
-              </v-col>
-              <v-col class="font-weight-bold">
-                <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
-                  {{ concept.content }}
-                </a>
-                {{ concept.title }}
-                <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
-              </v-col>
-            </v-row>
-          </v-card-item>
-        </v-card>
+        <v-container>
+          <v-row>
+            <v-col>
+              <v-card min-width="23vw">
+                <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
+                  <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
+                  &nbsp;
+                  新概念
+                  &nbsp;
+                  <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
+                </v-card-title>
+                <v-card-subtitle class="text-wrap">
+                  {{ conceptCoreRef }}
+                </v-card-subtitle>
+                <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
+                             @click="copyConcept(concept, $event)">
+                  <v-row>
+                    <v-col class="font-weight-bold" cols="3">
+                      {{ concept.ctime }}
+                    </v-col>
+                    <v-col class="font-weight-bold">
+                      <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
+                        {{ concept.content }}
+                      </a>
+                      {{ concept.title }}
+                      <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
+                    </v-col>
+                  </v-row>
+                </v-card-item>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card min-width="30vw">
+                <v-card-title class="cursor-pointer">
+                  <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
+                  &nbsp;
+                  媒体风向
+                  &nbsp;
+                </v-card-title>
+                <v-list>
+                  <v-list-subheader>抖音</v-list-subheader>
+                  <v-list-item v-for="(media, i) in mediaDouyin" :key="i" color="primary" rounded="shaped" v-ripple @click="goToUrl(media.url)">
+                    <template v-slot:prepend>
+                      <v-avatar>
+                        <v-img :alt="media.name" :src="media.avatar" />
+                      </v-avatar>
+                    </template>
+                    <v-list-item-title v-text="media.name" />
+                    <v-list-item-subtitle v-text="media.desc" />
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-timeline-item>
       <v-timeline-item v-if="!_.isEmpty(eastMoneyRanksRef)" fill-dot dot-color="grey" size="x-large">
         <template v-slot:icon>
@@ -945,12 +990,12 @@ function isGoogleChrome() {
               <tbody>
               <tr v-for="(rank, i) in eastMoneyRanksRef" :key="i">
                 <td>{{ i + 1 }}</td>
-                <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUS(eastMoneyUSRanksRef[i])">
+                <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEastMoney(eastMoneyUSRanksRef[i])">
                   {{ eastMoneyUSRanksRef[i].code }} | {{ eastMoneyUSRanksRef[i].chineseName }}
                 </td>
                 <td>{{ hotRankChange(eastMoneyUSRanksRef[i].rankChange) }}</td>
 
-                <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToEastMoney(rank.code)">
+                <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEsCode(rank.code)">
                   {{ rank.name }}
                 </td>
                 <td>{{ hotRankChange(rank.rankChange) }}</td>
@@ -1070,7 +1115,7 @@ function isGoogleChrome() {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+                    <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
                       <td :class="trendingClass(trending)">
                         {{ i + 1 }}.{{ trending.title }}
                       </td>
@@ -1102,7 +1147,7 @@ function isGoogleChrome() {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event, false)">
+                    <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event, false)">
                       <td :class="trendingClass(trending)">
                         <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
                       </td>
@@ -1134,7 +1179,7 @@ function isGoogleChrome() {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(trending, i) in douyinTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrl(trending, $event)">
+                    <tr v-for="(trending, i) in douyinTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
                       <td :class="trendingClass(trending)">
                         {{ i + 1 }}.{{ trending.title }}
                       </td>
