@@ -756,7 +756,7 @@ function isGoogleChrome() {
         <v-card-title>
           <v-icon icon="mdi-electron-framework"></v-icon>
           &nbsp;
-          东方财富 & 雪球 & 财联社
+          东方财富 & 雪球
           &nbsp;
         </v-card-title>
         <v-card-text>
@@ -1054,7 +1054,7 @@ function isGoogleChrome() {
                 <v-card-title>
                   <v-icon icon="mdi-electron-framework"></v-icon>
                   &nbsp;
-                  东方财富 & 雪球 & 财联社
+                  东方财富 & 雪球
                   &nbsp;
                 </v-card-title>
                 <v-card-text>
