@@ -899,7 +899,7 @@ function isGoogleChrome() {
         <v-container>
           <v-row>
             <v-col>
-              <v-card min-width="23vw">
+              <v-card min-width="580px">
                 <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
                   <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
                   &nbsp;
@@ -928,7 +928,7 @@ function isGoogleChrome() {
               </v-card>
             </v-col>
             <v-col>
-              <v-card min-width="30vw">
+              <v-card min-width="500px">
                 <v-card-title class="cursor-pointer">
                   <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
                   &nbsp;
