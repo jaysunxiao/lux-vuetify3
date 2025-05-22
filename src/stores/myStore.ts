@@ -32,6 +32,7 @@ export const useMyStore = defineStore("myStore", {
     // setting
     newsNotify: true,
     squareNotify: true,
+    particles: true,
 
     // chatgpt
     baidu: true,
@@ -61,7 +62,7 @@ export const useMyStore = defineStore("myStore", {
   persist: {
     enabled: true,
     strategies: [{storage: localStorage, paths: ["announce", "token", "user", "lastForceShow",
-        "newsNotify", "squareNotify",
+        "newsNotify", "squareNotify", "particles",
         "baidu", "xunfei", "llama", "tencent", "deepseek", "alibaba", "google", "chatgpt",
         "baiduCharacter", "xunfeiCharacter", "llamaCharacter", "tencentCharacter", "deepseekCharacter", "alibabaCharacter", "googleCharacter", "chatgptCharacter",
         "googleSearch", "bingSearch", "weixinSearch", "bilibiliSearch"]}],

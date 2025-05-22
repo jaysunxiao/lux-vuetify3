@@ -17,6 +17,8 @@
     "@tiptap/pm": "^2.0.2",
     "@tiptap/starter-kit": "^2.0.2",
     "@tiptap/vue-3": "^2.0.2",
+    "@tsparticles/slim": "^3.8.1",
+    "@tsparticles/vue3": "^3.0.1",
     "@types/lodash": "^4.14.192",
     "@vueup/vue-quill": "^1.1.1",
     "@vueuse/core": "^9.13.0",

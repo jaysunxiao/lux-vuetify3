@@ -39,6 +39,14 @@ const snackbarStore = useSnackbarStore();
             </v-col>
           </v-row>
           <v-row>
+            <v-col cols=1>
+              <Icon width="30" icon="fluent-emoji-flat:party-popper" />
+            </v-col>
+            <v-col class="py-0" cols="6">
+              <v-switch v-model="myStore.particles" label="粒子特效" hide-details color="teal" inset></v-switch>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col>
               按照下图的方式打开浏览器通知权限
               <v-img src="aa/image/browser-notify.png"/>

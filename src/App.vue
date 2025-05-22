@@ -14,6 +14,7 @@
     <Setting />
     <NewsSearch />
     <Admin />
+    <Particle />
   </v-app>
 </template>
 
@@ -34,6 +35,7 @@ import Profile from "@/views/jiucai/dialog/Profile.vue";
 import Setting from "@/views/jiucai/dialog/Setting.vue";
 import NewsSearch from "@/views/jiucai/dialog/NewsSearch.vue";
 import Admin from "@/views/jiucai/dialog/Admin.vue";
+import Particle from "@/views/jiucai/common/Particle.vue";
 
 const customizeTheme = useCustomizeThemeStore();
 const route = useRoute();
