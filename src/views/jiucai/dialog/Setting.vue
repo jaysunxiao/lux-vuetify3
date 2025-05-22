@@ -23,7 +23,7 @@ const snackbarStore = useSnackbarStore();
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols=2>
+            <v-col md="1" cols="2">
               <Icon width="30" icon="icon-park:broadcast-radio" />
             </v-col>
             <v-col class="py-0">
@@ -31,7 +31,7 @@ const snackbarStore = useSnackbarStore();
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols=2>
+            <v-col md="1" cols="2">
               <Icon width="30" icon="icon-park:volume-notice" />
             </v-col>
             <v-col class="py-0">
@@ -39,7 +39,7 @@ const snackbarStore = useSnackbarStore();
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols=2>
+            <v-col md="1" cols="2">
               <Icon width="30" icon="fluent-emoji-flat:party-popper" />
             </v-col>
             <v-col class="py-0">
