@@ -336,7 +336,7 @@ async function requestMarkets() {
       datasets: [
         {
           type: 'line',
-          label: `韭菜指数`,
+          label: `韭指`,
           data: response.markets.map(it => it.marketIndex / marketIndexRatio),
           rawData: response.markets.map(it => it.amount)
         },
@@ -642,7 +642,345 @@ function isGoogleChrome() {
 
 <template>
   <v-container>
-    <template v-if="mobile">
+    <template v-if="!mobile">
+      <v-card>
+        <v-card-text>
+          <canvas id="indexChart"></canvas>
+        </v-card-text>
+        <v-card-subtitle>
+          上海主板的核心参照物是累加了上海主板所有股票的流通市值（去除了银行）
+          <v-slider v-model="newsStore.marketIndex" prepend-icon="mdi-swap-horizontal" min="1" max="512" step="1"></v-slider>
+        </v-card-subtitle>
+      </v-card>
+      <v-card class="my-6">
+        <v-card-text>
+          <canvas id="exchangeChart"></canvas>
+        </v-card-text>
+      </v-card>
+      <v-timeline density="compact" side="end">
+        <v-timeline-item v-if="!_.isEmpty(conceptsRef)" fill-dot dot-color="grey" size="x-large">
+          <template v-slot:icon>
+            <span>SSR</span>
+          </template>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-card min-width="580px">
+                  <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
+                    <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
+                    &nbsp;
+                    新概念
+                    &nbsp;
+                    <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
+                  </v-card-title>
+                  <v-card-subtitle class="text-wrap">
+                    {{ conceptCoreRef }}
+                  </v-card-subtitle>
+                  <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
+                               @click="copyConcept(concept, $event)">
+                    <v-row>
+                      <v-col class="font-weight-bold" cols="3">
+                        {{ concept.ctime }}
+                      </v-col>
+                      <v-col class="font-weight-bold">
+                        <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
+                          {{ concept.content }}
+                        </a>
+                        {{ concept.title }}
+                        <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
+                      </v-col>
+                    </v-row>
+                  </v-card-item>
+                </v-card>
+              </v-col>
+              <v-col>
+                <v-card min-width="500px">
+                  <v-card-title class="cursor-pointer">
+                    <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
+                    &nbsp;
+                    媒体风向
+                    &nbsp;
+                  </v-card-title>
+                  <v-list>
+                    <v-list-subheader>抖音</v-list-subheader>
+                    <v-list-item v-for="(media, i) in mediaDouyin" :key="i" color="primary" rounded="shaped" v-ripple @click="goToUrl(media.url)">
+                      <template v-slot:prepend>
+                        <v-avatar>
+                          <v-img :alt="media.name" :src="media.avatar" />
+                        </v-avatar>
+                      </template>
+                      <v-list-item-title v-text="media.name" />
+                      <v-list-item-subtitle v-text="media.desc" />
+                    </v-list-item>
+                  </v-list>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-timeline-item>
+        <v-timeline-item v-if="!_.isEmpty(eastMoneyRanksRef)" fill-dot dot-color="grey" size="x-large">
+          <template v-slot:icon>
+            <span>Rank</span>
+          </template>
+          <v-card>
+            <v-card-title v-ripple class="cursor-pointer" @click="goToRank()">
+              <v-icon icon="mdi-chili-hot" size="x-large"></v-icon>
+              &nbsp;
+              Top排行（点击跳转总人气排行）
+              &nbsp;
+            </v-card-title>
+            <v-card-text>
+              <v-table density="compact">
+                <thead>
+                <tr>
+                  <th>
+                    排名
+                  </th>
+                  <th>
+                    美股人气榜 | 纳斯达克
+                  </th>
+                  <th>
+                    升降
+                  </th>
+                  <th>
+                    A股人气榜
+                  </th>
+                  <th>
+                    升降
+                  </th>
+                  <th>
+                    AI解析(红色字体的股票为最近3天新出现在前100的人气个股)
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(rank, i) in eastMoneyRanksRef" :key="i">
+                  <td>{{ i + 1 }}</td>
+                  <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEastMoney(eastMoneyUSRanksRef[i])">
+                    {{ eastMoneyUSRanksRef[i].code }} | {{ eastMoneyUSRanksRef[i].chineseName }}
+                  </td>
+                  <td>{{ hotRankChange(eastMoneyUSRanksRef[i].rankChange) }}</td>
+
+                  <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEsCode(rank.code)">
+                    {{ rank.name }}
+                  </td>
+                  <td>{{ hotRankChange(rank.rankChange) }}</td>
+                  <td v-html="rank.info"></td>
+                </tr>
+                </tbody>
+              </v-table>
+            </v-card-text>
+          </v-card>
+        </v-timeline-item>
+        <v-timeline-item v-if="!_.isEmpty(douyinTrendingRef) || !_.isEmpty(xueqiuTrendingRef)" fill-dot dot-color="grey" size="x-large">
+          <template v-slot:icon>
+            <span>Hot</span>
+          </template>
+          <v-container class="pa-0">
+            <v-row>
+              <v-col cols="6">
+                <v-card v-tooltip:start="'黑色粗体为一天内的资讯'">
+                  <v-card-title>
+                    <v-icon icon="mdi-chart-bell-curve"></v-icon>
+                    &nbsp;
+                    彭博社
+                    &nbsp;
+                  </v-card-title>
+                  <v-card-text>
+                    <v-table density="compact">
+                      <thead>
+                      <tr>
+                        <th>
+                          独家资讯
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('彭博社', trending, $event)">
+                        <td :class="trendingClass(trending)">
+                          {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
+                        </td>
+                      </tr>
+                      </tbody>
+                    </v-table>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col cols="6">
+                <v-card v-tooltip:start="'黑色粗体为一天内的电报'">
+                  <v-card-title>
+                    <v-icon icon="mdi-routes"></v-icon>
+                    &nbsp;
+                    路透社
+                    &nbsp;
+                  </v-card-title>
+                  <v-card-text>
+                    <v-table density="compact">
+                      <thead>
+                      <tr>
+                        <th>
+                          内幕电报
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('路透社', trending, $event)">
+                        <td :class="trendingClass(trending)">
+                          {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
+                        </td>
+                      </tr>
+                      </tbody>
+                    </v-table>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="5">
+                <v-card>
+                  <v-card-title>
+                    <v-icon icon="mdi-electron-framework"></v-icon>
+                    &nbsp;
+                    东方财富 & 雪球
+                    &nbsp;
+                  </v-card-title>
+                  <v-card-text>
+                    <v-table density="compact">
+                      <thead>
+                      <tr>
+                        <th>
+                          智能聚合
+                        </th>
+                        <th>
+                          来源
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
+                        <td :class="trendingClass(trending)">
+                          {{ i + 1 }}.{{ trending.title }}
+                        </td>
+                        <td>{{ trending.subTitle }}</td>
+                      </tr>
+                      </tbody>
+                    </v-table>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col cols="4">
+                <v-card>
+                  <v-card-title>
+                    <v-icon icon="mdi-lightbulb-on-outline"></v-icon>
+                    &nbsp;
+                    研报
+                    &nbsp;
+                  </v-card-title>
+                  <v-card-text>
+                    <v-table density="compact">
+                      <thead>
+                      <tr>
+                        <th>
+                          策略报告
+                        </th>
+                        <!--                      <th>-->
+                        <!--                        媒体-->
+                        <!--                      </th>-->
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event, false)">
+                        <td :class="trendingClass(trending)">
+                          <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
+                        </td>
+                        <!--                      <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>-->
+                      </tr>
+                      </tbody>
+                    </v-table>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col cols="3">
+                <v-card>
+                  <v-card-title>
+                    <v-icon icon="mdi-music-circle-outline"></v-icon>
+                    &nbsp;
+                    抖音热榜
+                    &nbsp;
+                  </v-card-title>
+                  <v-card-text>
+                    <v-table density="compact">
+                      <thead>
+                      <tr>
+                        <th>
+                          关键词
+                        </th>
+                        <th>
+                          热度
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(trending, i) in douyinTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
+                        <td :class="trendingClass(trending)">
+                          {{ i + 1 }}.{{ trending.title }}
+                        </td>
+                        <td>{{ trending.subTitle }}</td>
+                      </tr>
+                      </tbody>
+                    </v-table>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-timeline-item>
+        <v-timeline-item v-for="newsEle in newsRef" fill-dot :dot-color="levelMap[newsEle.level].color" :size="levelMap[newsEle.level].size">
+          <template v-slot:icon>
+            <span>{{ levelMap[newsEle.level].type }}</span>
+          </template>
+          <v-card max-width="1100px">
+            <v-card-title class="cursor-pointer" v-tooltip:start="'复制'" v-ripple @click="copyNews(newsEle, $event)">
+              <v-icon :color="levelMap[newsEle.level].color" :icon="levelMap[newsEle.level].icon"></v-icon>
+              级情报 {{ formatTimestampMMDDHHMM(newsEle.ctime) }}
+              <v-icon v-if="newsStore.isNew(newsEle.id)" color="primary" icon="mdi-new-box"></v-icon>
+            </v-card-title>
+            <v-card-subtitle>
+              {{ newsEle.title }}
+            </v-card-subtitle>
+            <v-card-text class="text-pre-wrap">
+              {{ newsEle.content }}
+            </v-card-text>
+            <v-card-actions
+              v-if="!_.isEmpty(newsEle.stocks) || !_.isEmpty(newsEle.concepts) || !_.isEmpty(newsEle.subjects)">
+              <div>
+                <template v-if="!_.isEmpty(newsEle.stocks)">
+                  <v-chip v-for="stock in newsEle.stocks" :color="_.toNumber(stock.rise) > 8 ? 'primary' : ''" size="x-small" class="mr-1">
+                    {{ stock.name }} {{ stock.price }} / {{ stock.rise }}
+                  </v-chip>
+                </template>
+                <template v-if="!_.isEmpty(newsEle.concepts)">
+                  <v-icon v-if="!_.isEmpty(newsEle.stocks)" icon="mdi-slash-forward"></v-icon>
+                  <v-chip v-for="concept in newsEle.concepts" :color="_.toNumber(concept.rise) > 2 ? 'primary' : ''" size="x-small" variant="outlined"
+                          class="mr-1">
+                    {{ concept.name }} {{ concept.rise }}
+                  </v-chip>
+                </template>
+                <template v-if="!_.isEmpty(newsEle.subjects)">
+                  <v-icon v-if="!_.isEmpty(newsEle.stocks) || !_.isEmpty(newsEle.concepts)" icon="mdi-slash-forward"></v-icon>
+                  <v-chip v-for="subject in newsEle.subjects" size="x-small" class="mr-1">
+                    {{ subject }}
+                  </v-chip>
+                </template>
+              </div>
+            </v-card-actions>
+          </v-card>
+        </v-timeline-item>
+      </v-timeline>
+    </template>
+
+
+    <template v-else>
       <v-card v-if="!_.isEmpty(conceptsRef)" class="mt-3">
         <v-card-title v-ripple @click="requestConcepts(108, true)">
           <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
@@ -886,355 +1224,6 @@ function isGoogleChrome() {
 
 
 
-
-
-
-
-
-    <v-timeline v-else density="compact" side="end">
-      <v-timeline-item v-if="!_.isEmpty(conceptsRef)" fill-dot dot-color="grey" size="x-large">
-        <template v-slot:icon>
-          <span>SSR</span>
-        </template>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-card min-width="580px">
-                <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
-                  <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
-                  &nbsp;
-                  新概念
-                  &nbsp;
-                  <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
-                </v-card-title>
-                <v-card-subtitle class="text-wrap">
-                  {{ conceptCoreRef }}
-                </v-card-subtitle>
-                <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
-                             @click="copyConcept(concept, $event)">
-                  <v-row>
-                    <v-col class="font-weight-bold" cols="3">
-                      {{ concept.ctime }}
-                    </v-col>
-                    <v-col class="font-weight-bold">
-                      <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
-                        {{ concept.content }}
-                      </a>
-                      {{ concept.title }}
-                      <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
-                    </v-col>
-                  </v-row>
-                </v-card-item>
-              </v-card>
-            </v-col>
-            <v-col>
-              <v-card min-width="500px">
-                <v-card-title class="cursor-pointer">
-                  <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
-                  &nbsp;
-                  媒体风向
-                  &nbsp;
-                </v-card-title>
-                <v-list>
-                  <v-list-subheader>抖音</v-list-subheader>
-                  <v-list-item v-for="(media, i) in mediaDouyin" :key="i" color="primary" rounded="shaped" v-ripple @click="goToUrl(media.url)">
-                    <template v-slot:prepend>
-                      <v-avatar>
-                        <v-img :alt="media.name" :src="media.avatar" />
-                      </v-avatar>
-                    </template>
-                    <v-list-item-title v-text="media.name" />
-                    <v-list-item-subtitle v-text="media.desc" />
-                  </v-list-item>
-                </v-list>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-timeline-item>
-      <v-timeline-item v-if="!_.isEmpty(eastMoneyRanksRef)" fill-dot dot-color="grey" size="x-large">
-        <template v-slot:icon>
-          <span>Rank</span>
-        </template>
-        <v-card>
-          <v-card-title v-ripple class="cursor-pointer" @click="goToRank()">
-            <v-icon icon="mdi-chili-hot" size="x-large"></v-icon>
-            &nbsp;
-            Top排行（点击跳转总人气排行）
-            &nbsp;
-          </v-card-title>
-          <v-card-text>
-            <v-table density="compact">
-              <thead>
-              <tr>
-                <th>
-                  排名
-                </th>
-                <th>
-                  美股人气榜 | 纳斯达克
-                </th>
-                <th>
-                  升降
-                </th>
-                <th>
-                  A股人气榜
-                </th>
-                <th>
-                  升降
-                </th>
-                <th>
-                  AI解析(红色字体的股票为最近3天新出现在前100的人气个股)
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(rank, i) in eastMoneyRanksRef" :key="i">
-                <td>{{ i + 1 }}</td>
-                <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEastMoney(eastMoneyUSRanksRef[i])">
-                  {{ eastMoneyUSRanksRef[i].code }} | {{ eastMoneyUSRanksRef[i].chineseName }}
-                </td>
-                <td>{{ hotRankChange(eastMoneyUSRanksRef[i].rankChange) }}</td>
-
-                <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEsCode(rank.code)">
-                  {{ rank.name }}
-                </td>
-                <td>{{ hotRankChange(rank.rankChange) }}</td>
-                <td v-html="rank.info"></td>
-              </tr>
-              </tbody>
-            </v-table>
-          </v-card-text>
-        </v-card>
-      </v-timeline-item>
-      <v-timeline-item fill-dot dot-color="primary" size="x-large">
-        <template v-slot:icon>
-          <span>韭指</span>
-        </template>
-        <v-card :min-width="isGoogleChrome() ? '80vw' : '60vw'">
-          <v-card-text>
-            <canvas id="indexChart"></canvas>
-          </v-card-text>
-          <v-card-subtitle>
-            上海主板的核心参照物是累加了上海主板所有股票的流通市值（去除了银行）
-            <v-slider v-model="newsStore.marketIndex" prepend-icon="mdi-swap-horizontal" min="1" max="512" step="1"></v-slider>
-          </v-card-subtitle>
-        </v-card>
-      </v-timeline-item>
-      <v-timeline-item fill-dot dot-color="primary" size="x-large">
-        <template v-slot:icon>
-          <span>量能</span>
-        </template>
-        <v-card :min-width="isGoogleChrome() ? '80vw' : '60vw'">
-          <v-card-text>
-            <canvas id="exchangeChart"></canvas>
-          </v-card-text>
-        </v-card>
-      </v-timeline-item>
-      <v-timeline-item v-if="!_.isEmpty(douyinTrendingRef) || !_.isEmpty(xueqiuTrendingRef)" fill-dot dot-color="grey" size="x-large">
-        <template v-slot:icon>
-          <span>Hot</span>
-        </template>
-        <v-container class="pa-0">
-          <v-row>
-            <v-col cols="6">
-              <v-card v-tooltip:start="'黑色粗体为一天内的资讯'">
-                <v-card-title>
-                  <v-icon icon="mdi-chart-bell-curve"></v-icon>
-                  &nbsp;
-                  彭博社
-                  &nbsp;
-                </v-card-title>
-                <v-card-text>
-                  <v-table density="compact">
-                    <thead>
-                    <tr>
-                      <th>
-                        独家资讯
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(trending, i) in bloomBergTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('彭博社', trending, $event)">
-                      <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
-                      </td>
-                    </tr>
-                    </tbody>
-                  </v-table>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="6">
-              <v-card v-tooltip:start="'黑色粗体为一天内的电报'">
-                <v-card-title>
-                  <v-icon icon="mdi-routes"></v-icon>
-                  &nbsp;
-                  路透社
-                  &nbsp;
-                </v-card-title>
-                <v-card-text>
-                  <v-table density="compact">
-                    <thead>
-                    <tr>
-                      <th>
-                        内幕电报
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(trending, i) in reutersTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlRouters('路透社', trending, $event)">
-                      <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }} - {{ trending.subTitle }} - {{ formatTimeAgo(trending.ctime) }}
-                      </td>
-                    </tr>
-                    </tbody>
-                  </v-table>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="5">
-              <v-card>
-                <v-card-title>
-                  <v-icon icon="mdi-electron-framework"></v-icon>
-                  &nbsp;
-                  东方财富 & 雪球
-                  &nbsp;
-                </v-card-title>
-                <v-card-text>
-                  <v-table density="compact">
-                    <thead>
-                    <tr>
-                      <th>
-                        智能聚合
-                      </th>
-                      <th>
-                        来源
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(trending, i) in xueqiuTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
-                      <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }}
-                      </td>
-                      <td>{{ trending.subTitle }}</td>
-                    </tr>
-                    </tbody>
-                  </v-table>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="4">
-              <v-card>
-                <v-card-title>
-                  <v-icon icon="mdi-lightbulb-on-outline"></v-icon>
-                  &nbsp;
-                  研报
-                  &nbsp;
-                </v-card-title>
-                <v-card-text>
-                  <v-table density="compact">
-                    <thead>
-                    <tr>
-                      <th>
-                        策略报告
-                      </th>
-                      <!--                      <th>-->
-                      <!--                        媒体-->
-                      <!--                      </th>-->
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(trending, i) in dfcfTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event, false)">
-                      <td :class="trendingClass(trending)">
-                        <a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ i + 1 }}.{{ trending.title }}</a>
-                      </td>
-                      <!--                      <td><a :href="trending.url" referrerPolicy="no-referrer" target="_blank">{{ trending.subTitle }}</a></td>-->
-                    </tr>
-                    </tbody>
-                  </v-table>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="3">
-              <v-card>
-                <v-card-title>
-                  <v-icon icon="mdi-music-circle-outline"></v-icon>
-                  &nbsp;
-                  抖音热榜
-                  &nbsp;
-                </v-card-title>
-                <v-card-text>
-                  <v-table density="compact">
-                    <thead>
-                    <tr>
-                      <th>
-                        关键词
-                      </th>
-                      <th>
-                        热度
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(trending, i) in douyinTrendingRef" :key="i" class="cursor-pointer" v-ripple @click="goToUrlTrending(trending, $event)">
-                      <td :class="trendingClass(trending)">
-                        {{ i + 1 }}.{{ trending.title }}
-                      </td>
-                      <td>{{ trending.subTitle }}</td>
-                    </tr>
-                    </tbody>
-                  </v-table>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-timeline-item>
-      <v-timeline-item v-for="newsEle in newsRef" fill-dot :dot-color="levelMap[newsEle.level].color" :size="levelMap[newsEle.level].size">
-        <template v-slot:icon>
-          <span>{{ levelMap[newsEle.level].type }}</span>
-        </template>
-        <v-card max-width="1100px">
-          <v-card-title class="cursor-pointer" v-tooltip:start="'复制'" v-ripple @click="copyNews(newsEle, $event)">
-            <v-icon :color="levelMap[newsEle.level].color" :icon="levelMap[newsEle.level].icon"></v-icon>
-            级情报 {{ formatTimestampMMDDHHMM(newsEle.ctime) }}
-            <v-icon v-if="newsStore.isNew(newsEle.id)" color="primary" icon="mdi-new-box"></v-icon>
-          </v-card-title>
-          <v-card-subtitle>
-            {{ newsEle.title }}
-          </v-card-subtitle>
-          <v-card-text class="text-pre-wrap">
-            {{ newsEle.content }}
-          </v-card-text>
-          <v-card-actions
-            v-if="!_.isEmpty(newsEle.stocks) || !_.isEmpty(newsEle.concepts) || !_.isEmpty(newsEle.subjects)">
-            <div>
-              <template v-if="!_.isEmpty(newsEle.stocks)">
-                <v-chip v-for="stock in newsEle.stocks" :color="_.toNumber(stock.rise) > 8 ? 'primary' : ''" size="x-small" class="mr-1">
-                  {{ stock.name }} {{ stock.price }} / {{ stock.rise }}
-                </v-chip>
-              </template>
-              <template v-if="!_.isEmpty(newsEle.concepts)">
-                <v-icon v-if="!_.isEmpty(newsEle.stocks)" icon="mdi-slash-forward"></v-icon>
-                <v-chip v-for="concept in newsEle.concepts" :color="_.toNumber(concept.rise) > 2 ? 'primary' : ''" size="x-small" variant="outlined"
-                        class="mr-1">
-                  {{ concept.name }} {{ concept.rise }}
-                </v-chip>
-              </template>
-              <template v-if="!_.isEmpty(newsEle.subjects)">
-                <v-icon v-if="!_.isEmpty(newsEle.stocks) || !_.isEmpty(newsEle.concepts)" icon="mdi-slash-forward"></v-icon>
-                <v-chip v-for="subject in newsEle.subjects" size="x-small" class="mr-1">
-                  {{ subject }}
-                </v-chip>
-              </template>
-            </div>
-          </v-card-actions>
-        </v-card>
-      </v-timeline-item>
-    </v-timeline>
     <v-progress-linear v-if="loadingRef" indeterminate color="primary"></v-progress-linear>
     <v-footer v-else v-ripple class="d-flex flex-column" color="primary" @click="loadMoreNews">
       更多
