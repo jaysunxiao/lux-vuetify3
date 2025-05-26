@@ -71,7 +71,11 @@ const particlesOptions = ref({
       density: {
         enable: true,
       },
-      value: 80,
+      value: 32,
+      limit: {
+        mode: "delete",
+        value: 64
+      }
     },
     opacity: {
       value: 0.5,
