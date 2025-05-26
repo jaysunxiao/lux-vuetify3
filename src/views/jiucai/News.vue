@@ -711,60 +711,6 @@ function isGoogleChrome() {
       </v-card-text>
     </v-card>
 
-    <v-row class="ma-3">
-      <v-col v-if="!_.isEmpty(conceptsRef)">
-        <v-card min-width="580px">
-          <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
-            <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
-            &nbsp;
-            新概念
-            &nbsp;
-            <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
-          </v-card-title>
-          <v-card-subtitle class="text-wrap">
-            {{ conceptCoreRef }}
-          </v-card-subtitle>
-          <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
-                       @click="copyConcept(concept, $event)">
-            <v-row>
-              <v-col class="font-weight-bold" cols="3">
-                {{ concept.ctime }}
-              </v-col>
-              <v-col class="font-weight-bold">
-                <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
-                  {{ concept.content }}
-                </a>
-                {{ concept.title }}
-                <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
-              </v-col>
-            </v-row>
-          </v-card-item>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card min-width="500px">
-          <v-card-title class="cursor-pointer">
-            <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
-            &nbsp;
-            媒体风向
-            &nbsp;
-          </v-card-title>
-          <v-list>
-            <v-list-subheader>抖音</v-list-subheader>
-            <v-list-item v-for="(media, i) in mediaDouyin" :key="i" color="primary" rounded="shaped" v-ripple @click="goToUrl(media.url)">
-              <template v-slot:prepend>
-                <v-avatar>
-                  <v-img :alt="media.name" :src="media.avatar" />
-                </v-avatar>
-              </template>
-              <v-list-item-title v-text="media.name" />
-              <v-list-item-subtitle v-text="media.desc" />
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
-
     <v-row class="ma-3" v-if="!_.isEmpty(bloomBergTrendingRef) || !_.isEmpty(reutersTrendingRef)">
       <v-col cols="6">
         <v-card v-tooltip:start="'黑色粗体为一天内的资讯'">
@@ -919,6 +865,60 @@ function isGoogleChrome() {
               </tbody>
             </v-table>
           </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row class="ma-3">
+      <v-col v-if="!_.isEmpty(conceptsRef)">
+        <v-card min-width="580px">
+          <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
+            <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
+            &nbsp;
+            新概念
+            &nbsp;
+            <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
+          </v-card-title>
+          <v-card-subtitle class="text-wrap">
+            {{ conceptCoreRef }}
+          </v-card-subtitle>
+          <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
+                       @click="copyConcept(concept, $event)">
+            <v-row>
+              <v-col class="font-weight-bold" cols="3">
+                {{ concept.ctime }}
+              </v-col>
+              <v-col class="font-weight-bold">
+                <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
+                  {{ concept.content }}
+                </a>
+                {{ concept.title }}
+                <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
+              </v-col>
+            </v-row>
+          </v-card-item>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card min-width="500px">
+          <v-card-title class="cursor-pointer">
+            <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
+            &nbsp;
+            媒体风向
+            &nbsp;
+          </v-card-title>
+          <v-list>
+            <v-list-subheader>抖音</v-list-subheader>
+            <v-list-item v-for="(media, i) in mediaDouyin" :key="i" color="primary" rounded="shaped" v-ripple @click="goToUrl(media.url)">
+              <template v-slot:prepend>
+                <v-avatar>
+                  <v-img :alt="media.name" :src="media.avatar" />
+                </v-avatar>
+              </template>
+              <v-list-item-title v-text="media.name" />
+              <v-list-item-subtitle v-text="media.desc" />
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
