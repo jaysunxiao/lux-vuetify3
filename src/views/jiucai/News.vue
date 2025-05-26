@@ -641,22 +641,73 @@ function isGoogleChrome() {
 
 
 <template>
+  <template v-if="!mobile">
+    <v-card class="mx-6 my-3">
+      <v-card-text>
+        <canvas id="indexChart"></canvas>
+      </v-card-text>
+      <v-card-subtitle>
+        上海主板的核心参照物是累加了上海主板所有股票的流通市值（去除了银行）
+        <v-slider v-model="newsStore.marketIndex" prepend-icon="mdi-swap-horizontal" min="1" max="512" step="1"></v-slider>
+      </v-card-subtitle>
+    </v-card>
+    <v-card class="ma-6">
+      <v-card-text>
+        <canvas id="exchangeChart"></canvas>
+      </v-card-text>
+    </v-card>
+    <v-card v-if="!_.isEmpty(eastMoneyRanksRef)" class="ma-6">
+      <v-card-title v-ripple class="cursor-pointer" @click="goToRank()">
+        <v-icon icon="mdi-chili-hot" size="x-large"></v-icon>
+        &nbsp;
+        Top排行（点击跳转总人气排行）
+        &nbsp;
+      </v-card-title>
+      <v-card-text>
+        <v-table density="compact">
+          <thead>
+          <tr>
+            <th>
+              排名
+            </th>
+            <th>
+              美股人气榜 | 纳斯达克
+            </th>
+            <th>
+              升降
+            </th>
+            <th>
+              A股人气榜
+            </th>
+            <th>
+              升降
+            </th>
+            <th>
+              AI解析(红色字体的股票为最近3天新出现在前100的人气个股)
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(rank, i) in eastMoneyRanksRef" :key="i">
+            <td>{{ i + 1 }}</td>
+            <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEastMoney(eastMoneyUSRanksRef[i])">
+              {{ eastMoneyUSRanksRef[i].code }} | {{ eastMoneyUSRanksRef[i].chineseName }}
+            </td>
+            <td>{{ hotRankChange(eastMoneyUSRanksRef[i].rankChange) }}</td>
+
+            <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEsCode(rank.code)">
+              {{ rank.name }}
+            </td>
+            <td>{{ hotRankChange(rank.rankChange) }}</td>
+            <td v-html="rank.info"></td>
+          </tr>
+          </tbody>
+        </v-table>
+      </v-card-text>
+    </v-card>
+  </template>
   <v-container>
     <template v-if="!mobile">
-      <v-card>
-        <v-card-text>
-          <canvas id="indexChart"></canvas>
-        </v-card-text>
-        <v-card-subtitle>
-          上海主板的核心参照物是累加了上海主板所有股票的流通市值（去除了银行）
-          <v-slider v-model="newsStore.marketIndex" prepend-icon="mdi-swap-horizontal" min="1" max="512" step="1"></v-slider>
-        </v-card-subtitle>
-      </v-card>
-      <v-card class="my-6">
-        <v-card-text>
-          <canvas id="exchangeChart"></canvas>
-        </v-card-text>
-      </v-card>
       <v-timeline density="compact" side="end">
         <v-timeline-item v-if="!_.isEmpty(conceptsRef)" fill-dot dot-color="grey" size="x-large">
           <template v-slot:icon>
@@ -717,60 +768,6 @@ function isGoogleChrome() {
               </v-col>
             </v-row>
           </v-container>
-        </v-timeline-item>
-        <v-timeline-item v-if="!_.isEmpty(eastMoneyRanksRef)" fill-dot dot-color="grey" size="x-large">
-          <template v-slot:icon>
-            <span>Rank</span>
-          </template>
-          <v-card>
-            <v-card-title v-ripple class="cursor-pointer" @click="goToRank()">
-              <v-icon icon="mdi-chili-hot" size="x-large"></v-icon>
-              &nbsp;
-              Top排行（点击跳转总人气排行）
-              &nbsp;
-            </v-card-title>
-            <v-card-text>
-              <v-table density="compact">
-                <thead>
-                <tr>
-                  <th>
-                    排名
-                  </th>
-                  <th>
-                    美股人气榜 | 纳斯达克
-                  </th>
-                  <th>
-                    升降
-                  </th>
-                  <th>
-                    A股人气榜
-                  </th>
-                  <th>
-                    升降
-                  </th>
-                  <th>
-                    AI解析(红色字体的股票为最近3天新出现在前100的人气个股)
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(rank, i) in eastMoneyRanksRef" :key="i">
-                  <td>{{ i + 1 }}</td>
-                  <td :class="eastMoneyUSRanksRef[i].primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEastMoney(eastMoneyUSRanksRef[i])">
-                    {{ eastMoneyUSRanksRef[i].code }} | {{ eastMoneyUSRanksRef[i].chineseName }}
-                  </td>
-                  <td>{{ hotRankChange(eastMoneyUSRanksRef[i].rankChange) }}</td>
-
-                  <td :class="rank.primary ? 'cursor-pointer font-weight-black text-red' : 'cursor-pointer'" v-tooltip:end="'跳转东方财富'" v-ripple @click="goToUrlEsCode(rank.code)">
-                    {{ rank.name }}
-                  </td>
-                  <td>{{ hotRankChange(rank.rankChange) }}</td>
-                  <td v-html="rank.info"></td>
-                </tr>
-                </tbody>
-              </v-table>
-            </v-card-text>
-          </v-card>
         </v-timeline-item>
         <v-timeline-item v-if="!_.isEmpty(douyinTrendingRef) || !_.isEmpty(xueqiuTrendingRef)" fill-dot dot-color="grey" size="x-large">
           <template v-slot:icon>
