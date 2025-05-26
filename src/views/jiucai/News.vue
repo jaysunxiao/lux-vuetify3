@@ -705,70 +705,61 @@ function isGoogleChrome() {
         </v-table>
       </v-card-text>
     </v-card>
-  </template>
-  <v-container>
-    <template v-if="!mobile">
-      <v-timeline density="compact" side="end">
-        <v-timeline-item v-if="!_.isEmpty(conceptsRef)" fill-dot dot-color="grey" size="x-large">
-          <template v-slot:icon>
-            <span>SSR</span>
-          </template>
-          <v-container>
+    <v-row class="ma-3">
+      <v-col v-if="!_.isEmpty(conceptsRef)">
+        <v-card min-width="580px">
+          <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
+            <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
+            &nbsp;
+            新概念
+            &nbsp;
+            <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
+          </v-card-title>
+          <v-card-subtitle class="text-wrap">
+            {{ conceptCoreRef }}
+          </v-card-subtitle>
+          <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
+                       @click="copyConcept(concept, $event)">
             <v-row>
-              <v-col>
-                <v-card min-width="580px">
-                  <v-card-title class="cursor-pointer" v-tooltip:start="'更多概念'" v-ripple @click="requestConcepts(108, true)">
-                    <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
-                    &nbsp;
-                    新概念
-                    &nbsp;
-                    <v-icon icon="mdi-format-list-bulleted" size="small" color="primary"></v-icon>
-                  </v-card-title>
-                  <v-card-subtitle class="text-wrap">
-                    {{ conceptCoreRef }}
-                  </v-card-subtitle>
-                  <v-card-item v-for="concept in conceptsRef" :key="concept.id" class="text-pre-wrap py-1" v-ripple
-                               @click="copyConcept(concept, $event)">
-                    <v-row>
-                      <v-col class="font-weight-bold" cols="3">
-                        {{ concept.ctime }}
-                      </v-col>
-                      <v-col class="font-weight-bold">
-                        <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
-                          {{ concept.content }}
-                        </a>
-                        {{ concept.title }}
-                        <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
-                      </v-col>
-                    </v-row>
-                  </v-card-item>
-                </v-card>
+              <v-col class="font-weight-bold" cols="3">
+                {{ concept.ctime }}
               </v-col>
-              <v-col>
-                <v-card min-width="500px">
-                  <v-card-title class="cursor-pointer">
-                    <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
-                    &nbsp;
-                    媒体风向
-                    &nbsp;
-                  </v-card-title>
-                  <v-list>
-                    <v-list-subheader>抖音</v-list-subheader>
-                    <v-list-item v-for="(media, i) in mediaDouyin" :key="i" color="primary" rounded="shaped" v-ripple @click="goToUrl(media.url)">
-                      <template v-slot:prepend>
-                        <v-avatar>
-                          <v-img :alt="media.name" :src="media.avatar" />
-                        </v-avatar>
-                      </template>
-                      <v-list-item-title v-text="media.name" />
-                      <v-list-item-subtitle v-text="media.desc" />
-                    </v-list-item>
-                  </v-list>
-                </v-card>
+              <v-col class="font-weight-bold">
+                <a :href="concept.url" class="text-blue-lighten-2 font-weight-black" target="_blank">
+                  {{ concept.content }}
+                </a>
+                {{ concept.title }}
+                <v-icon v-if="new Date().getTime() - concept.time < NEW_CONCEPT_TIME" color="red" icon="mdi-alert-octagram-outline"></v-icon>
               </v-col>
             </v-row>
-          </v-container>
-        </v-timeline-item>
+          </v-card-item>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card min-width="500px">
+          <v-card-title class="cursor-pointer">
+            <v-icon icon="mdi-multimedia" size="x-large"></v-icon>
+            &nbsp;
+            媒体风向
+            &nbsp;
+          </v-card-title>
+          <v-list>
+            <v-list-subheader>抖音</v-list-subheader>
+            <v-list-item v-for="(media, i) in mediaDouyin" :key="i" color="primary" rounded="shaped" v-ripple @click="goToUrl(media.url)">
+              <template v-slot:prepend>
+                <v-avatar>
+                  <v-img :alt="media.name" :src="media.avatar" />
+                </v-avatar>
+              </template>
+              <v-list-item-title v-text="media.name" />
+              <v-list-item-subtitle v-text="media.desc" />
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row class="ma-3">
+      <v-timeline density="compact" side="end">
         <v-timeline-item v-if="!_.isEmpty(douyinTrendingRef) || !_.isEmpty(xueqiuTrendingRef)" fill-dot dot-color="grey" size="x-large">
           <template v-slot:icon>
             <span>Hot</span>
@@ -936,7 +927,7 @@ function isGoogleChrome() {
           <template v-slot:icon>
             <span>{{ levelMap[newsEle.level].type }}</span>
           </template>
-          <v-card max-width="1100px">
+          <v-card max-width="70vw">
             <v-card-title class="cursor-pointer" v-tooltip:start="'复制'" v-ripple @click="copyNews(newsEle, $event)">
               <v-icon :color="levelMap[newsEle.level].color" :icon="levelMap[newsEle.level].icon"></v-icon>
               级情报 {{ formatTimestampMMDDHHMM(newsEle.ctime) }}
@@ -974,10 +965,11 @@ function isGoogleChrome() {
           </v-card>
         </v-timeline-item>
       </v-timeline>
-    </template>
+    </v-row>
+  </template>
 
-
-    <template v-else>
+  <v-container>
+    <template v-if="mobile">
       <v-card v-if="!_.isEmpty(conceptsRef)" class="mt-3">
         <v-card-title v-ripple @click="requestConcepts(108, true)">
           <v-icon icon="mdi-wind-power" size="x-large"></v-icon>
